@@ -3,180 +3,210 @@
   <chance>
     <card>
       <amount>25</amount>
+      <id>1</id>
       <text>A prefeitura mandou abrir uma nova avenida, para o que desapropriou vários prédios. Em consequência seu terreno valorizou.</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>150</amount>
+      <id>2</id>
       <text>Houve um assalto à sua loja, mas você estava segurado.</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>80</amount>
+      <id>3</id>
       <text>Um amigo tinha lhe pedido um empréstimo e se esqueceu de devolver. Ele acaba de se lembrar.</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>200</amount>
+      <id>4</id>
       <text>Você está com sorte. Suas ações na Bolsa de Valores estão em alta.</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>50</amount>
+      <id>5</id>
       <text>Você trocou seu carro com um amigo e ainda saiu lucrando.</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>50</amount>
+      <id>6</id>
       <text>Você acaba de receber uma parcela do seu 13º salário.</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>100</amount>
+      <id>7</id>
       <text>Você tirou o primeiro lugar no Torneio de Tênis do seu clube. Parabéns!</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>100</amount>
+      <id>8</id>
       <text>O seu cachorro policial tirou o 1º prêmio na exposição do Kennel Club</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>0</amount>
+      <id>9</id>
       <text>Saída livre da prisão. (Conserve este cartão para quando lhe for preciso ou negocie-o em qualquer ocasião, por preço a combinar)</text>
       <title>SORTE</title>
       <type>jailPass</type>
     </card>
     <card>
-      <amount>0</amount>
+      <amount>200</amount>
+      <id>10</id>
       <text>Avance até o ponto de partida e... Receba 200</text>
       <title>SORTE</title>
       <type>goToStart</type>
     </card>
     <card>
       <amount>50</amount>
+      <id>11</id>
       <text>Você apostou com os parceiros deste jogo e ganhou.</text>
       <title>SORTE</title>
       <type>bet</type>
     </card>
     <card>
       <amount>45</amount>
+      <id>12</id>
       <text>Você saiu de férias e se hospedou na casa de um amigo. Você economizou o hotel.</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>100</amount>
+      <id>13</id>
       <text>Inesperadamente você recebeu uma herança que já estava esquecida.</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>100</amount>
+      <id>14</id>
       <text>Você foi promovido a diretor da sua empresa.</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>20</amount>
+      <id>15</id>
       <text>Você jogou na Loteria Esportiva com um grupo de amigos. Ganharam!</text>
       <title>SORTE</title>
       <type>receive</type>
     </card>
     <card>
       <amount>15</amount>
+      <id>16</id>
       <text>Um amigo pediu-lhe um empréstimo. Você não pode recusar.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>25</amount>
+      <id>17</id>
       <text>Você vai casar e está comprando um apartamento novo.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>45</amount>
+      <id>18</id>
       <text>O médico lhe recomendou repouso num bom hotel de montanha.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>30</amount>
+      <id>19</id>
       <text>Você achou interessante assistir à estréia da temporada de ballet. Compre os ingressos.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>100</amount>
+      <id>20</id>
       <text>Parabéns! Você convidou seus amigos para festejar o aniversário.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>100</amount>
+      <id>21</id>
       <text>Você é papai outra vez! Despesas de maternidade.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>40</amount>
+      <id>22</id>
       <text>Papai os livros do ano passado não servem mais, preciso de livros novos.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>0</amount>
+      <id>23</id>
       <text>Vá para a prisão sem receber nada. (Talvez eu lhe faça uma visita...)</text>
       <title>AZAR</title>
       <type>goToJail</type>
     </card>
     <card>
       <amount>30</amount>
+      <id>24</id>
       <text>Você estacionou seu carro em lugar proibido e entrou na contra mão.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>50</amount>
+      <id>25</id>
       <text>Você acaba de receber a comunicação do Imposto de Renda</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>25</amount>
+      <id>26</id>
       <text>Seu clube está ampliando as piscinas. Os sócios devem contribuir.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>30</amount>
+      <id>27</id>
       <text>Renove a tempo a licença do seu automóvel.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>45</amount>
+      <id>28</id>
       <text>Seus parentes do interior vieram passar umas "férias" na sua casa.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>50</amount>
+      <id>29</id>
       <text>Seus filhos já vão para a escola. Pague a primeira mensalidade.</text>
       <title>AZAR</title>
       <type>charge</type>
     </card>
     <card>
       <amount>50</amount>
+      <id>30</id>
       <text>A geada prejudicou a sua safra de café.</text>
       <title>AZAR</title>
       <type>charge</type>
