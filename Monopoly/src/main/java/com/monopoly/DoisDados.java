@@ -24,12 +24,4 @@ public class DoisDados {
 		return dado1+dado2;
 	}
 
-	public static void main(String[] args) {
-		DoisDados d;
-		d = new DoisDados();
-		System.out.println("Dados inicializados" +d.obtemDado1()+ "e" + d.obtemDado2()+ "de soma"+ d.obtemSoma());
-		d.rodaDados();
-		System.out.println("Dados rodados" +d.obtemDado1()+ "e" + d.obtemDado2()+ "de soma"+ d.obtemSoma());
-	}
-
 }
