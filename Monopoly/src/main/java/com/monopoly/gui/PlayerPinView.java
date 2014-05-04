@@ -29,8 +29,8 @@ public class PlayerPinView
 		
 		// Adiciona um pequeno offset aleatório em torno da posição real do pin, para que
 		//  evite-se overlap.
-		this.jitterOffset = new Point( (int) ((Math.random() - 0.5) * 30),
-									   (int) ((Math.random() - 0.5) * 30) );
+		this.jitterOffset = new Point( (int) ((Math.random() - 0.5) * 25),
+									   (int) ((Math.random() - 0.5) * 25) );
 		
 		// Carrega o pino correto a ser exibido dada a cor do jogador
 		loadPinImage( Player.PlayerColor.colorToString( p.getPinColor() ) );
