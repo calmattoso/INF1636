@@ -33,7 +33,7 @@ public class MonopolyApp {
 		p1.addObserver( p1View );
 		
 		JButton changePosition = new JButton("Roll Dice");
-		changePosition.setBounds(0, 0, 130, 20);
+		changePosition.setBounds(0, 0, 110, 30);
 		
 		changePosition.setEnabled(true);
 		changePosition.setActionCommand("change");

@@ -63,9 +63,9 @@ public class PlayerPinView extends JPanel implements Observer {
 	
 	private void loadPinImage( String pinColor )
 	{
-		String path = "pins/" + pinColor + "_pin.png";
+		String path = "src/main/resources/pins/" + pinColor + "_pin.png";
 		
-		pin = new ImageIcon(this.getClass().getClassLoader().getResource(path));
+		pin = new ImageIcon(path);
 	}
 	
 	private void updateBounds(){		

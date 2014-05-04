@@ -31,7 +31,6 @@ public class Board extends JPanel {
 		COMPANHIA_DE_TAXI_AEREO, IPANEMA, SORTE6, JARDIM_PAULISTA, BROOKLYN;
 		
 		private Point coordinates;
-		private BoardSpaces next;
 		
 		// faz um mapeamento das posições para respectivas coordenadas
 		static {
@@ -89,7 +88,7 @@ public class Board extends JPanel {
 	
 	public Board( int x , int y )
 	{
-		board = new ImageIcon(this.getClass().getClassLoader().getResource("tabuleiro.png"));
+		board = new ImageIcon("src/main/resources/tabuleiro.png");
                  
         this.x = x;
         this.y = y;

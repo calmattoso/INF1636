@@ -10,26 +10,8 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.m2e.core.maven2Builder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src/test/config</name>
-			<type>2</type>
-			<location>C:/Users/Carlos/SkyDrive/PUC/INF1636 - POO/INF1636/Monopoly/src/main/config</location>
-		</link>
-		<link>
-			<name>src/test/resources</name>
-			<type>2</type>
-			<location>C:/Users/Carlos/SkyDrive/PUC/INF1636 - POO/INF1636/Monopoly/src/main/resources</location>
-		</link>
-	</linkedResources>
 </projectDescription>
