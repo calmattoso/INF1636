@@ -1,8 +1,12 @@
-package com.monopoly;
+package com.monopoly.game;
 
 import java.util.Observable;
 
-public class Player extends Observable {
+import com.monopoly.gui.Board;
+
+public class Player 
+	extends Observable
+{
 	private Board.BoardSpaces position;
 	private PlayerColor pinColor;
 	private double money;
@@ -36,7 +40,7 @@ public class Player extends Observable {
  		}
 	}
 	
- 	Player( Board.BoardSpaces position , double money , PlayerColor pinColor )
+ 	public Player( Board.BoardSpaces position , double money , PlayerColor pinColor )
 	{
 		this.position = position;
 		
@@ -45,17 +49,21 @@ public class Player extends Observable {
 		this.pinColor = pinColor;
 	}
 	
-	Player()
+	public Player()
 	{
-		this( Board.BoardSpaces.START , 0.0 , PlayerColor.BLACK );
+		this( Board.BoardSpaces.INICIO , 0.0 , PlayerColor.BLACK );
 	}
 	
-	public PlayerColor getPinColor() {
+	public PlayerColor getPinColor(){
 		return pinColor;
 	}
 	
 	public void setPinColor( PlayerColor p ) {
 		this.pinColor = p;
+	}
+	
+	public double getMoney(){
+		return money;
 	}
 	
 	public void depositMoney( double ammount ){
@@ -66,10 +74,6 @@ public class Player extends Observable {
 		money -= ammount;
 	}
 	
-	public double getMoney(){
-		return money;
-	}
-	
 	public Board.BoardSpaces getPosition(){
 		return position;
 	}
@@ -78,9 +82,8 @@ public class Player extends Observable {
 	{
 		this.position = newPosition;
 		this.setChanged();
-		
-		System.out.println(newPosition);
 				
 		this.notifyObservers( this.position );	
 	}
+	
 }

@@ -1,4 +1,4 @@
-package com.monopoly;
+package com.monopoly.gui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -11,19 +11,28 @@ import javax.swing.JPanel;
 import java.util.Observable;
 import java.util.Observer;
 
-import com.monopoly.Player;
+import com.monopoly.game.Player;
 
-public class PlayerPinView extends JPanel implements Observer {
+public class PlayerPinView 
+	extends JPanel 
+	implements Observer 
+{
 	private static final long serialVersionUID = 2386349901642426601L;
-	private Point coordinates , offset;
+	private Point coordinates , offset , jitterOffset ;
 	private ImageIcon pin;
 	private Dimension pinDimension;
 	
-	PlayerPinView( Player p , Point offset )
+	public PlayerPinView( final Player p , Point offset )
 	{
 		this.coordinates = Board.BoardSpaces.spaceToPoint( p.getPosition() );
 		this.offset = offset;
-						
+		
+		// Adiciona um pequeno offset aleatório em torno da posição real do pin, para que
+		//  evite-se overlap.
+		this.jitterOffset = new Point( (int) ((Math.random() - 0.5) * 30),
+									   (int) ((Math.random() - 0.5) * 30) );
+		
+		// Carrega o pino correto a ser exibido dada a cor do jogador
 		loadPinImage( Player.PlayerColor.colorToString( p.getPinColor() ) );
 		
 		this.pinDimension = new Dimension( pin.getIconWidth() , pin.getIconHeight() );
@@ -32,7 +41,7 @@ public class PlayerPinView extends JPanel implements Observer {
 		updateBounds();
 	}
 	
-	PlayerPinView()
+	public PlayerPinView()
 	{
 		this( new Player() , new Point(0,0) );
 	}
@@ -55,7 +64,6 @@ public class PlayerPinView extends JPanel implements Observer {
 			Board.BoardSpaces space = (Board.BoardSpaces) update;
 			
 			this.coordinates = Board.BoardSpaces.spaceToPoint( space );
-			System.out.println(coordinates);
 			
 			updateBounds();
 		}
@@ -69,7 +77,8 @@ public class PlayerPinView extends JPanel implements Observer {
 	}
 	
 	private void updateBounds(){		
-		this.setBounds( coordinates.x  + offset.x , coordinates.y + offset.y ,
+		this.setBounds( coordinates.x  + offset.x + jitterOffset.x , 
+						coordinates.y  + offset.y + jitterOffset.y ,
 						pinDimension.width, pinDimension.height );
 	}
 }

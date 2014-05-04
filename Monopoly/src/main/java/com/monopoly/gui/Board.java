@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.monopoly;
+package com.monopoly.gui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -11,17 +11,15 @@ import java.awt.Point;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 
-/**
- * @author Carlos
- *
- */
-public class Board extends JPanel {
+public class Board 
+	extends JPanel 
+{
 	private static final long serialVersionUID = 3149157930506422886L;
 	private ImageIcon board;
 	private int x , y;
 	
 	public static enum BoardSpaces {
-		START, LEBLON, SORTE, AV_PRESIDENTE_VARGAS, AV_NOSSA_S_DE_COPACABANA,
+		INICIO, LEBLON, SORTE, AV_PRESIDENTE_VARGAS, AV_NOSSA_S_DE_COPACABANA,
 		COMPANHIA_FERROVIARIA, AV_BRIGADEIRO_FARIA_LIMA, COMPANHIA_DE_VIACAO,
 		AV_REBOUCAS, AV_9_DE_JULHO, PRISAO, AV_EUROPA, SORTE2, RUA_AUGUSTA,
 		AV_PACAEMBU, COMPANHIA_DE_TAXI, SORTE3, INTERLAGOS, LUCROS, MORUMBI,
@@ -34,7 +32,7 @@ public class Board extends JPanel {
 		
 		// faz um mapeamento das posições para respectivas coordenadas
 		static {
-			START.coordinates = new Point( 860 , 72 );
+			INICIO.coordinates = new Point( 860 , 72 );
 			LEBLON.coordinates = new Point( 860 , 168 );
 			SORTE.coordinates = new Point( 860 , 240 );
 			AV_PRESIDENTE_VARGAS.coordinates = new Point( 860 , 316 );
