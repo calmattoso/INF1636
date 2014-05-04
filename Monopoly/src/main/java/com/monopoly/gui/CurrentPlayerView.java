@@ -1,9 +1,12 @@
 package com.monopoly.gui;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.font.TextAttribute;
+import java.text.AttributedString;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -44,21 +47,50 @@ public class CurrentPlayerView
 	@Override
 	public void paintComponent(Graphics g)
 	{		
-		super.paintComponent(g);
-				
+		super.paintComponent(g);				
 		Graphics2D g2d = (Graphics2D) g;
 		
-		String color = Player.PlayerColor.colorToString( player.getPlayer().getPinColor() ).toUpperCase();
+		// Obtém a string de cor
+		String color = Player.PlayerColor.colorToString( player.getPlayer().getPinColor() ).toUpperCase(),
+			   output = " Jogador atual: " + color + " pin ";
+		
+		
+		// Vamos pintar a substring de cor com sua respectiva cor
+		AttributedString as1 = new AttributedString( output );
+		as1.addAttribute(TextAttribute.FONT, new Font("Calibri", Font.BOLD , 16));
+        as1.addAttribute(TextAttribute.FOREGROUND, getColor( player.getPlayer().getPinColor() ), 16 , output.length() - 4 );
+        as1.addAttribute(TextAttribute.BACKGROUND, Color.lightGray );
 
+        // Melhora qualidade do texto
         RenderingHints rh = new RenderingHints( RenderingHints.KEY_ANTIALIASING  , 
             									RenderingHints.VALUE_ANTIALIAS_ON );
         rh.put( RenderingHints.KEY_RENDERING ,
-        		RenderingHints.VALUE_RENDER_QUALITY );
-        
-        g2d.setFont( new Font("Times New Roman", Font.BOLD, 16) );
-               
+        		RenderingHints.VALUE_RENDER_QUALITY );               
         g2d.setRenderingHints(rh);        
-        g2d.drawString("Jogador atual: " + color + " pin" , 12, 12);
+        
+        // Exibe
+        g2d.drawString( as1.getIterator() , 12 , 12 );
+	}
+	
+	private Color getColor( Player.PlayerColor color )
+	{
+		switch( color )
+		{
+		case BLACK:
+			return Color.black;
+		case BLUE:
+			return Color.blue;
+		case ORANGE:
+			return Color.orange;
+		case PURPLE:
+			return Color.magenta;
+		case RED:
+			return Color.red;
+		case YELLOW:
+			return Color.yellow;
+		default:
+			return Color.black;		
+		}
 	}
 
 }

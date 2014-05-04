@@ -14,6 +14,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.Observable;
 
 import javax.swing.JButton;
@@ -52,7 +53,7 @@ public class GUI
 		// Criação das entidades do jogo
 		board = new Board( 50 , 50 );
 		playerPins = new PlayerPinView[ numberOfPlayers ];	
-		diceView = new DiceView( this.width/2 - 80 , 30 );
+		diceView = new DiceView( this.width/2 - 120 , 30 );
 		currentPlayerView = new CurrentPlayerView(this.width/2 - 80 , 10);
 		
 		// Criação do menu de controle do jogo
@@ -134,6 +135,7 @@ public class GUI
 
 
 	/**
+	 * Usado para enviar mensagens para o controlador do jogo. (Game.java)
 	 * Lida com algum evento gerado pelo usuário ao interagir com a GUI.
 	 * 	Em geral, cliques em botões [TODO: ou valores em caixa de texto]
 	 * 
@@ -149,7 +151,6 @@ public class GUI
 			this.notifyObservers( GAME_DICE_ROLLED );
 		}
 	}
-	
 	
 	/**
 	 * Adiciona todas as entidades gráficas na tela, antes desta ser 
@@ -175,6 +176,8 @@ public class GUI
 		// Adiciona a view do jogador atual
 		this.addComponent( currentPlayerView , 4 , 1 );
 	}
+
+	
 
 	
 }

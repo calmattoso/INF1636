@@ -61,7 +61,7 @@ public class DiceView
         g2d.setFont( new Font("Times New Roman", Font.BOLD, 16) );
                
         g2d.setRenderingHints(rh);        
-        g2d.drawString("Dado 1: " + String.valueOf( die1 ) + "  Dado 2: " + String.valueOf( die2 ) , 12, 12);
+        g2d.drawString("Turno Anterior - Dado 1: " + String.valueOf( die1 ) + " | Dado 2: " + String.valueOf( die2 ) , 12, 12);
 	}
 
 }

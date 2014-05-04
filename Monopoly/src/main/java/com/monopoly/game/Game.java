@@ -20,9 +20,10 @@ public class Game
 	public Game(int numberOfPlayers) {
 		players = new Player[numberOfPlayers];
 		createPlayers(numberOfPlayers);
-		doubleCount = new int[numberOfPlayers];
+		
+		doubleCount    = new int[numberOfPlayers];
 		roundsInPrison = new int[numberOfPlayers];
-		isInPrison = new boolean[numberOfPlayers];
+		isInPrison 	   = new boolean[numberOfPlayers];
 
 		currentPlayerID = 0;
 		currentPlayer = new CurrentPlayer( players[ currentPlayerID ] );
@@ -36,66 +37,78 @@ public class Game
 
 	public void evaluateMovement() {
 		Player currentPlayer = players[currentPlayerID];
-		Board.BoardSpaces position = currentPlayer.getPosition(), nextPosition = Board.BoardSpaces.INICIO;
-
-		// boolean haltTurn = false;
+		Board.BoardSpaces position = currentPlayer.getPosition(), 
+						  nextPosition = Board.BoardSpaces.INICIO ;
 
 		dice.roll();
-
+		
+		// Se em um movimento anterior o jogador acabou caindo na posição, vá
+		//	para prisão, ele é primeiramente colocado lá
+		if( position == Board.BoardSpaces.VA_PARA_A_PRISAO )
+		{
+			currentPlayer.setPosition( Board.BoardSpaces.PRISAO );
+			position = Board.BoardSpaces.PRISAO;
+			
+			isInPrison[ currentPlayerID ]  = true;
+			doubleCount[ currentPlayerID ] = 0;
+		}
+		
 		// Calcula imediatamente a potencial próxima posição
-
+		nextPosition = position.getNext( dice.getSum() );
 		
 		//se não for dupla
-		if((dice.getDie1() != dice.getDie2()))
+		if( dice.getDie1() != dice.getDie2() )
 		{
-
-			if(isInPrison[currentPlayerID] == true)
+			if(isInPrison[ currentPlayerID ] == true)
 			{
 				//se o jogador estiver na prisão, aumenta o tempo de rodadas dele
 				roundsInPrison[currentPlayerID]++;
-				if(roundsInPrison[currentPlayerID] >3)
-					// se o jogador tiver 4 dias na prisão, sai pagando multa
-					getOutOfJail(currentPlayer,currentPlayerID,true);
+				
+				if( roundsInPrison[currentPlayerID] > 3 )
+				{
+					// se o jogador tiver passado 4 rodadas na prisão, sai pagando multa
+					getOutOfJail( currentPlayerID , true );
+				}
 			}
 			else
 			{
 				//reseta o contador de duplas, caso ele não esteja na prisão
-				doubleCount[currentPlayerID]=0;
-			}
-
-			// em todos os casos, o jogador anda a quantidade dos dados e passa a vez
-			nextPosition = position.getNext( dice.getSum() );
-			currentPlayer.setPosition( nextPosition );
+				doubleCount[currentPlayerID] = 0;
+				
+				currentPlayer.setPosition( nextPosition );
+			}			
 
 			nextPlayer();
 		}
 
 		else
 		{
-			//se for dupla
-
-			if(isInPrison[currentPlayerID] == true)
+			//se for dupla			
+			if( isInPrison[ currentPlayerID ] == true )
 			{
 				// se o jogador estiver na prisão ele sai sem multa, anda e passa a vez
-				getOutOfJail(currentPlayer,currentPlayerID,false);
-				nextPosition = position.getNext( dice.getSum() );
+				getOutOfJail( currentPlayerID , false );
+				
 				currentPlayer.setPosition( nextPosition );
+				
 				nextPlayer();
 			}
 			else
 			{
 				// se estiver fora da prisão aumenta sua contagem de duplas
 				doubleCount[currentPlayerID]++;
-				if(doubleCount[currentPlayerID]>2)
+				
+				if( doubleCount[currentPlayerID] > 2 )
 				{
 					// se chegar em 3 duplas vai para a prisão e passa a vez
-					goToJail(currentPlayerID);
+					goToJail( currentPlayerID );
+					
 					nextPlayer();
 				}
-				else{
+				else
+				{
 					// se o jogador estiver com menos de 3 duplas, anda e joga novamente
-				nextPosition = position.getNext( dice.getSum() );
-				currentPlayer.setPosition( nextPosition );
+					currentPlayer.setPosition( nextPosition );
 				}	
 			}
 			
@@ -141,19 +154,20 @@ public class Game
 		return this.currentPlayer;
 	}
 
-	private void getOutOfJail(Player player,int playerID, boolean fine)
+	private void getOutOfJail( int playerID , boolean fine )
 	{
 		if(fine == true)
 		{
-			player.withdrawMoney(50);
+			players[ playerID ].withdrawMoney(50);
 		}
-		roundsInPrison[playerID]=0;
-		isInPrison[playerID] = false;
+		
+		roundsInPrison[ playerID ] = 0;
+		isInPrison[ playerID ] = false;
 	}
 
 	private void goToJail(int playerID)
 	{
-		isInPrison[playerID] = true;
+		isInPrison[ playerID ] = true ;
 	}
 
 	
