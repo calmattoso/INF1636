@@ -24,7 +24,7 @@ public class DiceView
 		die1 = 0;
 		die2 = 0;
 		
-		this.setBounds( x , y , 300, 100 ) ;
+		this.setBounds( x , y , 300, 20 ) ;
 	}
 
 	public void update(Observable dices, Object event) {
@@ -40,8 +40,9 @@ public class DiceView
 	}
 	
 	@Override
-	public void paint(Graphics g)
+	public void paintComponent(Graphics g)
 	{		
+		super.paintComponent(g);
 		// Não exibe a string na primeira execução
 		if( die1 == die2 && die1 == 0 )
 		{

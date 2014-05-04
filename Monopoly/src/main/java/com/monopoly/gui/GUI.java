@@ -3,6 +3,7 @@
  */
 package com.monopoly.gui;
 
+import com.monopoly.game.CurrentPlayer;
 import com.monopoly.game.Dice;
 import com.monopoly.game.GameEvents;
 import com.monopoly.game.Player;
@@ -33,6 +34,7 @@ public class GUI
 	private final Board board;
 	private PlayerPinView[] playerPins;
 	private DiceView diceView;
+	private CurrentPlayerView currentPlayerView;
 	
 	// Botão para lançar os dados
 	private JButton rollDice;
@@ -51,6 +53,7 @@ public class GUI
 		board = new Board( 50 , 50 );
 		playerPins = new PlayerPinView[ numberOfPlayers ];	
 		diceView = new DiceView( this.width/2 - 80 , 30 );
+		currentPlayerView = new CurrentPlayerView(this.width/2 - 80 , 10);
 		
 		// Criação do menu de controle do jogo
 		rollDice = new JButton("Roll Dice");
@@ -79,6 +82,10 @@ public class GUI
 		d.addObserver( diceView );
 	}
 
+	public void setUpCurrentPlayer(CurrentPlayer currentPlayer) {
+		currentPlayerView.setCurrentPlayer( currentPlayer );		
+	}
+	
 	/**
 	 * Encapsula adição de novas entidade gráficas ao JLayeredPane usado para controle
 	 * 	de camadas.
@@ -164,5 +171,10 @@ public class GUI
 		
 		// Adiciona a view dos dados
 		this.addComponent( diceView , 3 , 1 );
+		
+		// Adiciona a view do jogador atual
+		this.addComponent( currentPlayerView , 4 , 1 );
 	}
+
+	
 }

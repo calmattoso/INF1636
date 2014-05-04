@@ -12,11 +12,14 @@ public class Game
 	private Player[] players;
 	private Dice dice;
 	private int currentPlayerID;
+	private CurrentPlayer currentPlayer; // Torna possível observar quem é o atual jogador
 
 	public Game(int numberOfPlayers) {
 		players = new Player[numberOfPlayers];
 		createPlayers(numberOfPlayers);
+		
 		currentPlayerID = 0;
+		currentPlayer = new CurrentPlayer( players[ currentPlayerID ] );
 
 		dice = new Dice(6);
 	}
@@ -51,6 +54,7 @@ public class Game
 
 	private void nextPlayer() {
 		currentPlayerID = (currentPlayerID + 1) % players.length;
+		currentPlayer.setPlayer( players[ currentPlayerID ] );
 	}
 
 	public void update(Observable gui, Object event) {
@@ -71,5 +75,11 @@ public class Game
 	public Dice getDice() {
 		return this.dice;
 	}
+	
+	public CurrentPlayer getCurrentPlayer()
+	{
+		return this.currentPlayer;
+	}
 
+	
 }

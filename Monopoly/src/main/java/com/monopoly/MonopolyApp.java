@@ -28,7 +28,8 @@ public class MonopolyApp
         		window.addObserver( game );
         		
         		window.setUpPlayerPinViews( game.getPlayers() );
-        		window.setUpDiceView( game.getDice() );		
+        		window.setUpDiceView( game.getDice() );	
+        		window.setUpCurrentPlayer( game.getCurrentPlayer() );
         		
         		window.setupWindow();		
         		
