@@ -50,7 +50,7 @@ public class GUI
 		// Criação das entidades do jogo
 		board = new Board( 50 , 50 );
 		playerPins = new PlayerPinView[ numberOfPlayers ];	
-		diceView = new DiceView( 500 , 10 );
+		diceView = new DiceView( this.width/2 - 80 , 30 );
 		
 		// Criação do menu de controle do jogo
 		rollDice = new JButton("Roll Dice");
