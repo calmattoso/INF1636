@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.monopoly.game.Board;
 import com.monopoly.game.Player;
 
 public class PlayerPinView 
@@ -24,7 +25,7 @@ public class PlayerPinView
 	
 	public PlayerPinView( final Player p , Point offset )
 	{
-		this.coordinates = Board.BoardSpaces.spaceToPoint( p.getPosition() );
+		this.coordinates = BoardView.spaceToPoint( p.getPosition() );
 		this.offset = offset;
 		
 		// Adiciona um pequeno offset aleatório em torno da posição real do pin, para que
@@ -63,9 +64,10 @@ public class PlayerPinView
 		if( update instanceof Board.BoardSpaces ){
 			Board.BoardSpaces space = (Board.BoardSpaces) update;
 			
-			this.coordinates = Board.BoardSpaces.spaceToPoint( space );
+			this.coordinates = BoardView.spaceToPoint( space );
 			
 			updateBounds();
+			repaint();
 		}
 	}
 	

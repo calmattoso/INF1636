@@ -1,15 +1,16 @@
 package com.monopoly.game;
 
+import java.util.ArrayList;
 import java.util.Observable;
-
-import com.monopoly.gui.Board;
 
 public class Player 
 	extends Observable
 {
 	private Board.BoardSpaces position;
 	private PlayerColor pinColor;
-	private double money;
+	private ArrayList<Card> ownedCards;
+	private int money;
+	
 	
 	public static enum PlayerColor {
 		BLACK,
@@ -40,18 +41,18 @@ public class Player
  		}
 	}
 	
- 	public Player( Board.BoardSpaces position , double money , PlayerColor pinColor )
+	
+ 	public Player( Board.BoardSpaces position , int money , PlayerColor pinColor )
 	{
-		this.position = position;
-		
-		this.money = money;
-		
+		this.position = position;		
+		this.money = money;		
 		this.pinColor = pinColor;
+		this.ownedCards = new ArrayList<Card>();
 	}
 	
 	public Player()
 	{
-		this( Board.BoardSpaces.INICIO , 0.0 , PlayerColor.BLACK );
+		this( Board.BoardSpaces.INICIO , 2458 , PlayerColor.BLACK );
 	}
 	
 	public PlayerColor getPinColor(){
@@ -74,6 +75,26 @@ public class Player
 		money -= ammount;
 	}
 	
+	public ArrayList<Card> getOwnedCards()
+	{
+		return this.ownedCards;
+	}
+	
+	public void addCard( Card newCard )
+		throws IllegalArgumentException
+	{
+		if( newCard.getHasOwner() == true )
+		{
+			throw new IllegalArgumentException("Card already has an owner!");
+		}
+		if( this.ownedCards.contains( newCard ) == true )
+		{
+			throw new IllegalArgumentException("Player already has this card!");
+		}
+		
+		this.ownedCards.add( newCard );
+	}
+	
 	public Board.BoardSpaces getPosition(){
 		return position;
 	}
@@ -81,8 +102,7 @@ public class Player
 	public void setPosition( Board.BoardSpaces newPosition )
 	{
 		this.position = newPosition;
-		this.setChanged();
-				
+		this.setChanged();				
 		this.notifyObservers( this.position );	
 	}
 	

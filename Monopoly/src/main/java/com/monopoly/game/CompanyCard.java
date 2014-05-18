@@ -1,24 +1,46 @@
 package com.monopoly.game;
 
-public class CompanyCard extends Card {
+public class CompanyCard 
+	extends Card
+{
+	private int price;      // preço da carta
 	private int multiplier; // multiplicador 
-	private int mortgage; // valor da hipoteca
+	private int mortgage;   // valor da hipoteca
 
-	public CompanyCard(String name, int mult, int mort){
-		this.title = name;
+	
+	public CompanyCard(String name, int id, int mult, int mort, int price)
+	{
+		super(name, id);
+		
 		this.multiplier = mult;
 		this.mortgage = mort;
+		this.price = price;
+	}
+	
+	public CompanyCard(String name, int id)
+	{
+		this(name, id , 1 , 0 , 0 );
 	}
 
-	public int getMultiplier() {
+	
+	public int getMultiplier() 
+	{
 		return multiplier;
 	}
 
-	public int getMortgage() {
+	public int getMortgage()
+	{
 		return mortgage;
 	}
 
-	public int getDue(int sum) {
-		return this.multiplier * sum;
+	public int getPrice()
+	{
+		return price;
 	}
+	
+	public int getDue( int baseValue ) {
+		return ( this.multiplier * baseValue );
+	}
+	
+	
 }

@@ -32,7 +32,7 @@ public class GUI
 	private int width, height;
 	
 	// Views das entidades do jogo
-	private final Board board;
+	private final BoardView board;
 	private PlayerPinView[] playerPins;
 	private DiceView diceView;
 	private CurrentPlayerView currentPlayerView;
@@ -51,7 +51,7 @@ public class GUI
 		layers = new JLayeredPane();
 		
 		// Criação das entidades do jogo
-		board = new Board( 50 , 50 );
+		board = new BoardView( 50 , 50 );
 		playerPins = new PlayerPinView[ numberOfPlayers ];	
 		diceView = new DiceView( this.width/2 - 120 , 30 );
 		currentPlayerView = new CurrentPlayerView(this.width/2 - 80 , 10);

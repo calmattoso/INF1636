@@ -1,39 +1,193 @@
 package com.monopoly.game;
 
-public class TerrainCard extends Card {
-	private int propertyCost; // custo de construção para casas e hoteis
-	private int mortgage; // valor da hipoteca
-	private int[] rent; // ganho com aluguel de, respectivamente, 0,1,2,3 casas ou 1 hotel.
-	private int capacity; // quantas edificacoes ha no terreno
+import java.util.HashMap;
+import java.util.Map;
 
-	public TerrainCard(String id, int propCost, int mort, int[] rent, int cap){
-		this.title = id;
-		this.propertyCost = propCost;
-		this.mortgage = mort;
-		this.rent = rent;
-		this.capacity = cap;
+public class TerrainCard
+	extends Card
+{
+	private Map<PropertyType, Integer> propertyCapacity; // quantidade máxima por propriedade	
+	private Map<PropertyType, Integer> propertyQuantity; // quantas propriedades de cada tipo
+	private Map<PropertyType, int[]> rents; // associa cada tipo de propriedade aos possíveis valores de aluguel
+	
+	private int propertyCost; // custo de construção para casas e hoteis
+	private int baseRent;
+	private int mortgage; 	// valor da hipoteca
+	private int price; // custo de compra da carta
+	
+	private Color color;
+	
+	
+	/**
+	 * Types of properties which can be built on a given terrain.
+	 */
+	public static enum PropertyType 
+	{
+		HOUSE,
+		HOTEL
 	}
 	
-	public int getCost(){
+	/**
+	 * 
+	 * Each terrain card has a color which segments it into a specific group.
+	 * 
+	 */
+	public static enum Color 
+	{
+		BLUE,
+		GREEN,
+		YELLOW,
+		ORANGE,
+		PINK,
+		RED
+	}
+	
+	public static enum CondRet
+	{
+		PROPERTY_LIMIT_REACHED,
+		PROPERTY_ADDED,
+		MISSING_REQUIREMENTS
+	}
+	
+
+	public TerrainCard(String title, int id, int propertyCost, int mortgage,
+					   int price, int baseRent, Color color,
+					   Map<PropertyType, int[]> rents, 
+					   Map<PropertyType, Integer> propertyCapacity )
+	{
+		super(title, id);
+		
+		this.propertyCost = propertyCost;
+		this.mortgage = mortgage;
+		this.price = price;
+		this.baseRent = baseRent;
+		this.color = color;
+		
+		this.rents = new HashMap<PropertyType, int[]>( rents );
+		this.propertyCapacity = new HashMap<PropertyType, Integer>( propertyCapacity );
+		
+		this.propertyQuantity = new HashMap<PropertyType, Integer>();
+		this.propertyQuantity.put( PropertyType.HOUSE , 0 );
+		this.propertyQuantity.put( PropertyType.HOTEL , 0 );		
+	}
+
+	
+	public int getCost()
+	{
 		return propertyCost;
 	}
 	
-	public int getMortgage() {
+	public int getMortgage() 
+	{
 		return mortgage;
 	}
 	
-	public int[] getRent() {
-		return rent;
+	public int getPrice()
+	{
+		return price;
+	}
+	
+	public int getPropertyQuantity( PropertyType type )
+	{
+		return propertyQuantity.get( type );
+	}
+	
+	public int getPropertyCapacity( PropertyType type )
+	{
+		return propertyCapacity.get( type );
 	}
 
-
-	public int getCapacity() {
-		return capacity;
+	public int getRent( )
+	{
+		int currentHotelQuantity = this.propertyQuantity.get( PropertyType.HOTEL ),
+			currentHouseQuantity = this.propertyQuantity.get( PropertyType.HOUSE ) ;
+		
+		/**
+		 * Determine rent value based on what properties exist on the terrain,
+		 *   given their order of precedence. 
+		 * If there are no properties, return the base rent value.
+		 */
+		if( currentHotelQuantity > 0 )
+		{
+			return (this.rents.get( PropertyType.HOTEL ))[ currentHotelQuantity - 1 ];
+		}
+		else if( currentHouseQuantity > 0 )
+		{
+			return (this.rents.get( PropertyType.HOTEL ))[ currentHouseQuantity - 1 ];
+		}
+		else 
+		{
+			return baseRent;
+		}
+	}
+	
+	public Color getColor()
+	{
+		return this.color;
+	}
+	
+	
+	public CondRet addProperty( PropertyType type )
+			throws IllegalArgumentException
+	{
+		switch( type )
+		{
+		case HOUSE:
+			return addHouse();			
+			
+		case HOTEL:
+			return addHotel();
+		
+		default:
+			throw new IllegalArgumentException("Invalid property type!");
+		}
+	}
+	
+	private CondRet addHotel() {
+		int currentHotelQuantity = this.propertyQuantity.get( PropertyType.HOTEL ),
+			currentHouseQuantity = this.propertyQuantity.get( PropertyType.HOUSE ) ;	
+		
+		/**
+		 * A hotel can only be added if there's still an empty slot for it.
+		 */
+		if( currentHotelQuantity < this.propertyCapacity.get( PropertyType.HOTEL ) )
+		{
+			/**
+			 * Furthermore, all houses must have been built
+			 */
+			if( currentHouseQuantity == this.propertyCapacity.get( PropertyType.HOUSE ))
+			{
+				this.propertyQuantity.put( PropertyType.HOTEL , currentHotelQuantity + 1 );
+				
+				return CondRet.PROPERTY_ADDED;
+			}
+			else
+			{
+				return CondRet.MISSING_REQUIREMENTS;
+			}
+		}			
+		else
+		{
+			return CondRet.PROPERTY_LIMIT_REACHED;
+		}
 	}
 
-	
-
-	
-
-
+	private CondRet addHouse()
+	{
+		int currentHouseQuantity = this.propertyQuantity.get( PropertyType.HOUSE );
+		
+		/**
+		 * Houses can always be added as long as the terrain's housing capacity has not been reached.
+		 */
+		if( currentHouseQuantity < this.propertyCapacity.get( PropertyType.HOUSE ) )
+		{
+			this.propertyQuantity.put( PropertyType.HOUSE , currentHouseQuantity + 1 );
+			
+			return CondRet.PROPERTY_ADDED;
+		}
+		else 
+		{
+			return CondRet.PROPERTY_LIMIT_REACHED;
+		}
+	}
 }
