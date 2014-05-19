@@ -1,17 +1,36 @@
 package com.monopoly.game;
 
-import java.util.Observable;
-import java.util.Observer;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Random;
+
+import javax.swing.JOptionPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.monopoly.game.Player;
+import com.monopoly.game.Board.BoardSpaces;
+import com.monopoly.game.Board.CardInfo;
 
 public class Game 
-	implements Observer, GameEvents 
+	implements GameEvents 
 {
 	private Player[] players;
 	private Board board;
 	private int currentPlayerID;
 	private CurrentPlayer currentPlayer; // Torna possível observar quem é o atual jogador
+	private HashMap<Integer,ChanceCard> chanceCardsDeck;
+	private HashMap<Integer,CompanyCard> companyCardsDeck;
+	private HashMap<Integer,TerrainCard> terrainCardsDeck;
+	
+	private boolean onActiveCard;
 	
 	private Dice dice;	
 	
@@ -24,7 +43,7 @@ public class Game
 		players = new Player[numberOfPlayers];
 		createPlayers(numberOfPlayers);
 		
-		this.board = new Board();
+		this.onActiveCard = false;
 		
 		doubleCount    = new int[numberOfPlayers];
 		roundsInPrison = new int[numberOfPlayers];
@@ -34,12 +53,326 @@ public class Game
 		currentPlayer = new CurrentPlayer( players[ currentPlayerID ] );
 
 		dice = new Dice(6);
+		
+		chanceCardsDeck = new HashMap<Integer,ChanceCard>();
+		companyCardsDeck = new HashMap<Integer,CompanyCard>();
+		terrainCardsDeck = new HashMap<Integer,TerrainCard>();
+		
+		
+		loadTerrainCards("src/main/config/cards.xml");
+		loadCompanyCards("src/main/config/cards.xml");
+		loadChanceCards("src/main/config/cards.xml");
+		
+		this.board = new Board("src/main/config/board.xml");
 	}
-
+	
 	public Game() {
 		this(2);
 	}
 
+	/**
+	 * Parse the cards XML file and construct the terrain cards based on input
+	 *   information.
+	 *   
+	 * @param path Complete path to cards XML file.
+	 */
+	private void loadTerrainCards(String path) {
+		try {
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+		    Document doc = docBuilder.parse (new File(path));
+	
+		    // normalize text representation
+		    doc.getDocumentElement().normalize();
+		    System.out.println ("Root element of the doc is " + 
+		    	doc.getDocumentElement().getNodeName());
+	
+		    Element terrainCardList = (Element) doc.getElementsByTagName("terrain").item(0);
+		    NodeList listOfCards = terrainCardList.getElementsByTagName("card");
+		     
+		    System.out.println("Total no of terrain cards : " + listOfCards.getLength() );
+	
+		    for( int i = 0; i < listOfCards.getLength() ; ++i)
+		    {
+		    	Node cardNode = listOfCards.item( i );
+		        
+		    	if( cardNode.getNodeType() == Node.ELEMENT_NODE )
+		    	{
+		    		Element cardElement = ( Element ) cardNode;
+	
+		    		/**
+			         * Get the ID of the card.
+			         */
+			        NodeList list = cardElement.getElementsByTagName( "id" );
+			        int id = Integer.valueOf( list.item(0).getFirstChild().getTextContent() );
+		    		
+		    		/**
+		            * Get the base rent of the card.
+		            */
+		            list = cardElement.getElementsByTagName( "baseRent" );
+		            int baseRent = Integer.valueOf( list.item(0).getFirstChild().getTextContent() );
+		            
+		            /**
+			         * Get the mortgage rent of the card.
+			         */
+			        list = cardElement.getElementsByTagName( "mortgage" );
+			        int mortgage = Integer.valueOf( list.item(0).getFirstChild().getTextContent() );
+			        
+			        /**
+			         * Get the price of the card.
+			         */
+			        list = cardElement.getElementsByTagName( "price" );
+			        int cardPrice = Integer.valueOf( list.item(0).getFirstChild().getTextContent() );
+			        
+			        /**
+			         * Get the price per property which can be built on the card.
+			         */
+			        list = cardElement.getElementsByTagName( "propertyPrice" );
+			        int propertyPrice = Integer.valueOf( list.item(0).getFirstChild().getTextContent() );
+	
+			        /**
+			         * Get the color of the card.
+			         */
+			        list = cardElement.getElementsByTagName( "color" );
+			        String color = list.item(0).getFirstChild().getTextContent();
+			        System.out.println("color: " + color);
+			        
+			        /**
+			         * Get the title of the card.
+			         */
+			        list = cardElement.getElementsByTagName( "title" );
+			        String title = list.item(0).getFirstChild().getTextContent();	
+			        
+			        /**
+			         * For each property, generate an array of its rent prices.
+			         */
+			        String properties[] = new String[]{"house", "hotel"};
+			        TerrainCard.PropertyType[] propertyTypes = new TerrainCard.PropertyType[]{
+			        	TerrainCard.PropertyType.HOUSE , 
+			        	TerrainCard.PropertyType.HOTEL 
+			        };
+			        int[] capacities = new int[]{4,1};
+			        HashMap< TerrainCard.PropertyType,int[]> propertyRents = 
+			        	new HashMap< TerrainCard.PropertyType,int[]>();
+			        
+			        for( int k = 0; k < properties.length; k++ )
+			        {
+			        	String property = properties[k];
+			        	
+			        	Element propertyElement = ( Element ) cardElement.getElementsByTagName( property ).item(0);	
+			        	
+			        	NodeList rentsList = propertyElement.getElementsByTagName("rent").item(0).getChildNodes();
+			        	
+			        	int[] rents = new int[ capacities[k] ];
+			        	
+			        	for( int j = 0, ridx = 0; j < rentsList.getLength() ; ++j )
+			        	{
+			        		if( rentsList.item(j).getFirstChild() != null )
+			        		{
+			        			rents[ridx] = Integer.valueOf( rentsList.item(j).getFirstChild().getTextContent() );
+			        			ridx++;
+			        		}
+			        	}
+			        	
+			        	propertyRents.put( propertyTypes[k] , rents );
+			        }
+			        
+				    TerrainCard terrainCard = new TerrainCard(
+				    	title, id, propertyPrice, mortgage, cardPrice ,
+				    	baseRent, color, propertyRents
+				    );
+				    
+				    this.terrainCardsDeck.put(id, terrainCard);
+				    System.out.println( terrainCard );
+		    	}
+		    }
+		}
+		catch (SAXParseException err) 
+		{
+			System.out.println ("** Parsing error" + ", line " 
+				+ err.getLineNumber () + ", uri " + err.getSystemId ());
+		        System.out.println(" " + err.getMessage ());
+		}
+		catch (SAXException e) 
+		{
+			Exception x = e.getException ();
+		    ((x == null) ? e : x).printStackTrace ();
+		}
+		catch (Throwable t) 
+		{
+			t.printStackTrace ();
+		}
+		
+	}
+
+	private void loadCompanyCards(String path) {
+		try {
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+		    Document doc = docBuilder.parse (new File(path));
+	
+		    // normalize text representation
+		    doc.getDocumentElement().normalize();
+		    System.out.println ("Root element of the doc is " + 
+		    	doc.getDocumentElement().getNodeName());
+	
+		    Element terrainCardList = (Element) doc.getElementsByTagName("company").item(0);
+		    NodeList listOfCards = terrainCardList.getElementsByTagName("card");
+		     
+		    System.out.println("Total no of company cards : " + listOfCards.getLength() );
+	
+		    for( int i = 0; i < listOfCards.getLength() ; ++i)
+		    {
+		    	Node cardNode = listOfCards.item( i );
+		        
+		    	if( cardNode.getNodeType() == Node.ELEMENT_NODE )
+		    	{
+		    		Element cardElement = ( Element ) cardNode;
+	
+		    		/**
+			         * Get the ID of the card.
+			         */
+			        NodeList list = cardElement.getElementsByTagName( "id" );
+			        int id = Integer.valueOf( list.item(0).getFirstChild().getTextContent() );
+		    		
+		            /**
+			         * Get the mortgage rent of the card.
+			         */
+			        list = cardElement.getElementsByTagName( "mortgage" );
+			        int mortgage = Integer.valueOf( list.item(0).getFirstChild().getTextContent() );
+			        
+			        /**
+			         * Get the mortgage rent of the card.
+			         */
+			        list = cardElement.getElementsByTagName( "multiplier" );
+			        int multiplier = Integer.valueOf( list.item(0).getFirstChild().getTextContent() );
+			        
+			        /**
+			         * Get the price of the card.
+			         */
+			        list = cardElement.getElementsByTagName( "price" );
+			        int cardPrice = Integer.valueOf( list.item(0).getFirstChild().getTextContent() );
+		        
+			        /**
+			         * Get the title of the card.
+			         */
+			        list = cardElement.getElementsByTagName( "name" );
+			        String title = list.item(0).getFirstChild().getTextContent();	
+			        
+				    CompanyCard companyCard = new CompanyCard(
+				    	title, id, multiplier, mortgage, cardPrice
+				    );
+				    
+				    this.companyCardsDeck.put(id, companyCard);
+				    System.out.println( companyCard );
+		    	}
+		    }
+		}
+		catch (SAXParseException err) 
+		{
+			System.out.println ("** Parsing error" + ", line " 
+				+ err.getLineNumber () + ", uri " + err.getSystemId ());
+		        System.out.println(" " + err.getMessage ());
+		}
+		catch (SAXException e) 
+		{
+			Exception x = e.getException ();
+		    ((x == null) ? e : x).printStackTrace ();
+		}
+		catch (Throwable t) 
+		{
+			t.printStackTrace ();
+		}
+		
+	}
+
+	private void loadChanceCards(String path) {
+		try {
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+		    Document doc = docBuilder.parse (new File(path));
+	
+		    // normalize text representation
+		    doc.getDocumentElement().normalize();
+		    System.out.println ("Root element of the doc is " + 
+		    	doc.getDocumentElement().getNodeName());
+	
+		    Element terrainCardList = (Element) doc.getElementsByTagName("chance").item(0);
+		    NodeList listOfCards = terrainCardList.getElementsByTagName("card");
+		     
+		    System.out.println("Total no of company cards : " + listOfCards.getLength() );
+	
+		    for( int i = 0; i < listOfCards.getLength() ; ++i)
+		    {
+		    	Node cardNode = listOfCards.item( i );
+		        
+		    	if( cardNode.getNodeType() == Node.ELEMENT_NODE )
+		    	{
+		    		Element cardElement = ( Element ) cardNode;
+	
+		    		/**
+			         * Get the ID of the card.
+			         */
+			        NodeList list = cardElement.getElementsByTagName( "id" );
+			        int id = Integer.valueOf( list.item(0).getFirstChild().getTextContent() );
+			        
+			        /**
+			         * Get the title of the card.
+			         */
+			        list = cardElement.getElementsByTagName( "title" );
+			        String title = list.item(0).getFirstChild().getTextContent();	
+			        
+			        /**
+			         * Get the description of the card.
+			         */
+			        list = cardElement.getElementsByTagName( "description" );
+			        String description = list.item(0).getFirstChild().getTextContent();	
+		    		
+		            /**
+			         * Get the amount paid/taken by the card.
+			         */
+			        list = cardElement.getElementsByTagName( "amount" );
+			        int amount = Integer.valueOf( list.item(0).getFirstChild().getTextContent() );
+			        
+			        /**
+			         * Get the side effect type.
+			         */
+			        list = cardElement.getElementsByTagName( "sideEffect" );
+			       	String sideEffectStr = list.item(0).getFirstChild().getTextContent();
+			       	
+			       	ChanceCard.SideEffect sideEffect = ChanceCard.SideEffect.fromString.get( sideEffectStr );
+			        
+				    ChanceCard chanceCard = new ChanceCard(
+				    	title, id, description, amount, sideEffect
+				    );
+				    
+				    this.chanceCardsDeck.put(id, chanceCard);
+				    System.out.println( chanceCard );
+		    	}
+		    }
+		}
+		catch (SAXParseException err) 
+		{
+			System.out.println ("** Parsing error" + ", line " 
+				+ err.getLineNumber () + ", uri " + err.getSystemId ());
+		        System.out.println(" " + err.getMessage ());
+		}
+		catch (SAXException e) 
+		{
+			Exception x = e.getException ();
+		    ((x == null) ? e : x).printStackTrace ();
+		}
+		catch (Throwable t) 
+		{
+			t.printStackTrace ();
+		}
+		
+		
+	}
+
+	/**
+	 * Execute one turn of movment for the current player, evaluating game rules.
+	 */
 	public void evaluateMovement() {
 		Player currentPlayer = players[currentPlayerID];
 		Board.BoardSpaces position = currentPlayer.getPosition(), 
@@ -74,7 +407,7 @@ public class Game
 				doubleCount[currentPlayerID] = 0;
 				
 				currentPlayer.setPosition( nextPosition );
-				affectCurrentPlayer();
+				checkLandingPosition();
 			}			
 
 			nextPlayer();
@@ -89,7 +422,7 @@ public class Game
 				getOutOfJail( currentPlayerID , false );
 				
 				currentPlayer.setPosition( nextPosition );
-				affectCurrentPlayer();
+				checkLandingPosition();
 				
 				nextPlayer();
 			}
@@ -110,7 +443,7 @@ public class Game
 					// se o jogador estiver com menos de 3 duplas, anda e joga novamente
 					currentPlayer.setPosition( nextPosition );
 					
-					affectCurrentPlayer();
+					checkLandingPosition();
 				}	
 			}
 			
@@ -132,10 +465,133 @@ public class Game
 	 *    current player.
 	 * 
 	 */
-	private void affectCurrentPlayer() {
+	public void checkLandingPosition() {
+		Player currentPlayer = this.players[ this.currentPlayerID ];
+		Board.CardInfo card = board.getCardAtPosition(
+			currentPlayer.getPosition() );
 		
 		
-		return;		
+		System.out.println("Current card: ");
+		/**
+		 * Choose a random card and inform the player about what has happened.
+		 */
+		if( card.getType().equals("chance"))
+		{
+			Random rand = new Random();
+			int id = rand.nextInt(this.chanceCardsDeck.size());
+			ChanceCard chanceCard = this.chanceCardsDeck.get(id);
+			String output = 
+				"O jogador atual obteve:\n" + 
+				chanceCard.getTitle() + "\n" +
+				chanceCard.getDescription() + "\n";
+			
+			if( chanceCard.getAmount() != 0 )
+				output += "Valor: " + Math.abs( chanceCard.getAmount()) + "\n"; 
+			
+			
+			JOptionPane.showMessageDialog(null, output);		
+			
+			ChanceCard.SideEffect sideEffect = chanceCard.getSideEffect();
+			
+			switch( sideEffect )
+			{
+			case CHARGE_COMPETITORS:
+				for(Player p: this.players)
+				{
+					if( p != this.players[ this.currentPlayerID ] )
+					{
+						p.updateMoney( -chanceCard.getAmount() );
+					}
+				}
+				this.players[ this.currentPlayerID ].updateMoney(
+					((this.players.length - 1) * chanceCard.getAmount())
+				);
+				
+				break;
+			case GET_OUT_OF_JAIL:
+				this.players[ this.currentPlayerID ].setJailPass( true );
+				break;
+			case GO_TO_JAIL:
+				this.goToJail( this.currentPlayerID );
+				break;
+			case GO_TO_START:
+				this.players[ this.currentPlayerID ].setPosition( Board.BoardSpaces.INICIO );
+				break;
+			case NONE:
+			default:
+				this.players[ this.currentPlayerID ].updateMoney( chanceCard.getAmount() );
+				break;			
+			}		
+		}
+		else if( card.getType().equals("company" ))
+		{
+			System.out.println( this.companyCardsDeck.get( card.getID() ));
+			CompanyCard companyCard = this.companyCardsDeck.get( card.getID() );
+			int money = currentPlayer.getMoney(); 
+			
+			
+			if( companyCard.getHasOwner() == false &&
+				money > companyCard.getPrice()
+			)
+			{
+				int ans = JOptionPane.showConfirmDialog(null,
+						"Você quer comprar a companhia " + 
+						"\"" + companyCard.getTitle() + "\"?\n" +
+						"Seu saldo: " + money + "\n" +
+						"Preço: " + companyCard.getPrice(), 
+						"Oferta de Empresa",
+						JOptionPane.YES_NO_OPTION);
+				
+				if(ans == JOptionPane.YES_OPTION)
+				{
+					currentPlayer.updateMoney( -companyCard.getPrice() );	
+					currentPlayer.addCard( (Card) companyCard );
+					
+					companyCard.setHasOwner(true);
+					
+					JOptionPane.showMessageDialog(null,
+						"Você acaba de adquirir: \"" +
+						companyCard.getTitle() + "\"!\n" +
+						"Novo saldo: " + currentPlayer.getMoney()
+					);
+				}
+			}
+		}
+		else if( card.getType().equals("terrain"))
+		{
+			System.out.println( this.terrainCardsDeck.get( card.getID() ));
+			TerrainCard terrainCard = this.terrainCardsDeck.get( card.getID() );
+			int money = currentPlayer.getMoney(); 
+			
+			
+			if( terrainCard.getHasOwner() == false &&
+				money > terrainCard.getPrice()
+			)
+			{
+				int ans = JOptionPane.showConfirmDialog(null,
+						"Você quer comprar o terreno " + 
+						"\"" + terrainCard.getTitle() + "\"?\n" +
+						"Seu saldo: " + money + "\n" +
+						"Preço do lote: " + terrainCard.getPrice(), 
+						"Oferta de Terreno",
+						JOptionPane.YES_NO_OPTION);
+				
+				if(ans == JOptionPane.YES_OPTION)
+				{
+					currentPlayer.updateMoney( -terrainCard.getPrice() );	
+					currentPlayer.addCard( (Card) terrainCard );
+					
+					terrainCard.setHasOwner(true);
+					
+					JOptionPane.showMessageDialog(null,
+						"Você acaba de adquirir: \"" +
+						terrainCard.getTitle() + "\"!\n" +
+						"Novo saldo: " + currentPlayer.getMoney()
+					);
+				}
+			}
+		}
+
 	}
 
 	private void previousPlayerJailStatus( ) {
@@ -165,17 +621,6 @@ public class Game
 		currentPlayer.setPlayer( players[ currentPlayerID ] );
 	}
 
-	public void update(Observable gui, Object event) {
-		if (event instanceof String) {
-			String message = (String) event;
-
-			if ( message.equals( GAME_DICE_ROLLED ) ) {
-				evaluateMovement();
-			}
-		}
-
-	}
-
 	public Player[] getPlayers() {
 		return this.players;
 	}
@@ -193,7 +638,7 @@ public class Game
 	{
 		if(fine == true)
 		{
-			players[ playerID ].withdrawMoney(50);
+			players[ playerID ].updateMoney(-50);
 		}
 		
 		roundsInPrison[ playerID ] = 0;

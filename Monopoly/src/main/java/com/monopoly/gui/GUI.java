@@ -5,7 +5,6 @@ package com.monopoly.gui;
 
 import com.monopoly.game.CurrentPlayer;
 import com.monopoly.game.Dice;
-import com.monopoly.game.GameEvents;
 import com.monopoly.game.Player;
 
 import java.awt.BorderLayout;
@@ -14,7 +13,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.Observable;
 
 import javax.swing.JButton;
@@ -22,9 +20,9 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
 public class GUI 
-	extends    Observable 
-	implements ActionListener, GameEvents, GUIEvents
-{
+	extends Observable
+	implements ActionListener, GUIEvents
+{	
 	// Propriedades da janela
 	private JFrame viewPort;
 	private JLayeredPane layers;
@@ -59,7 +57,7 @@ public class GUI
 		// Criação do menu de controle do jogo
 		rollDice = new JButton("Roll Dice");
 		rollDice.setBounds(5, 5, 110, 30);
-		rollDice.setActionCommand( BTN_DICE_ROLLED );
+		rollDice.setActionCommand( GUI_BTN_DICE_ROLLED );
 		rollDice.addActionListener( this );
 	}
 	
@@ -78,6 +76,11 @@ public class GUI
 		}
 	}
 	
+	/**
+	 * Faz a conexão entre a view que mostra o resultado dos dados e os dados em si.
+	 * 
+	 * @param players	array of Player models
+	 */
 	public void setUpDiceView( Dice d )
 	{
 		d.addObserver( diceView );
@@ -141,14 +144,15 @@ public class GUI
 	 * 
 	 * @param event
 	 */
-	public void actionPerformed( ActionEvent event ) {
+ 	public void actionPerformed( ActionEvent event ) {
 		String message = event.getActionCommand();
 		
-		if( message == BTN_DICE_ROLLED )
+		if( message == GUI_BTN_DICE_ROLLED )
 		{	
 			System.out.println("Dice rolled");
+			
+			this.notifyObservers( GUI_BTN_DICE_ROLLED );
 			this.setChanged();
-			this.notifyObservers( GAME_DICE_ROLLED );
 		}
 	}
 	
@@ -176,8 +180,5 @@ public class GUI
 		// Adiciona a view do jogador atual
 		this.addComponent( currentPlayerView , 4 , 1 );
 	}
-
-	
-
 	
 }

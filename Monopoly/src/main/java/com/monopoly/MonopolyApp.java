@@ -3,12 +3,9 @@
  */
 package com.monopoly;
 
-import java.awt.Dimension;
-
 import javax.swing.SwingUtilities;
 
-import com.monopoly.game.Game;
-import com.monopoly.gui.GUI;
+import com.monopoly.game.GameController;
 
 
 public class MonopolyApp 
@@ -22,18 +19,7 @@ public class MonopolyApp
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() 
             {
-            	Game game = new Game( numberOfPlayers );		
-        		GUI window = new GUI( "Banco Imobiliario" , new Dimension(1020, 1024) , numberOfPlayers );
-        		
-        		window.addObserver( game );
-        		
-        		window.setUpPlayerPinViews( game.getPlayers() );
-        		window.setUpDiceView( game.getDice() );	
-        		window.setUpCurrentPlayer( game.getCurrentPlayer() );
-        		
-        		window.setupWindow();		
-        		
-        		window.displayWindow( true );
+            	new GameController( numberOfPlayers );
             }
         });
 		
