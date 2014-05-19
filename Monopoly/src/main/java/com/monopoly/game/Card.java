@@ -5,9 +5,9 @@ import java.util.Observable;
 public class Card 
 	extends Observable
 {
-	int id;
-	String title;
-	boolean hasOwner;
+	protected int id;
+	protected String title;
+	protected boolean hasOwner;
 	
 	public Card(String title, int id)
 	{

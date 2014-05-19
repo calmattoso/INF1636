@@ -42,5 +42,19 @@ public class CompanyCard
 		return ( this.multiplier * baseValue );
 	}
 	
+	public String toString()
+	{
+		String output;
+		
+		output =
+			"Title: " + this.title + "\n" +
+			"ID   : " + this.id    + "\n" +
+			"Price: " + this.price + "\n" +
+			"Multiplier: " + this.multiplier + "\n" +
+			"Mortgage  : " + this.mortgage   + "\n" ;
+		
+		return output;
+	}
+	
 	
 }

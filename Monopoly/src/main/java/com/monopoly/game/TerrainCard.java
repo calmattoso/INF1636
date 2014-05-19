@@ -24,7 +24,7 @@ public class TerrainCard
 	public static enum PropertyType 
 	{
 		HOUSE,
-		HOTEL
+		HOTEL;
 	}
 	
 	/**
@@ -39,7 +39,23 @@ public class TerrainCard
 		YELLOW,
 		ORANGE,
 		PINK,
-		RED
+		RED;
+		
+		/**
+		 * Get the color for a given string.
+		 */
+		private static HashMap< String , Color > fromString;		
+		static 
+		{
+			fromString = new HashMap<String,Color>();
+			
+			fromString.put( "BLUE"   , BLUE   );
+			fromString.put( "GREEN"  , GREEN  );
+			fromString.put( "YELLOW" , YELLOW );
+			fromString.put( "ORANGE" , ORANGE );
+			fromString.put( "PINK"   , PINK   );
+			fromString.put( "RED"    , RED    );     
+		}
 	}
 	
 	public static enum CondRet
@@ -51,9 +67,8 @@ public class TerrainCard
 	
 
 	public TerrainCard(String title, int id, int propertyCost, int mortgage,
-					   int price, int baseRent, Color color,
-					   Map<PropertyType, int[]> rents, 
-					   Map<PropertyType, Integer> propertyCapacity )
+					   int price, int baseRent, String color,
+					   Map<PropertyType, int[]> rents)
 	{
 		super(title, id);
 		
@@ -61,10 +76,13 @@ public class TerrainCard
 		this.mortgage = mortgage;
 		this.price = price;
 		this.baseRent = baseRent;
-		this.color = color;
+		this.color = Color.fromString.get( color );
 		
 		this.rents = new HashMap<PropertyType, int[]>( rents );
-		this.propertyCapacity = new HashMap<PropertyType, Integer>( propertyCapacity );
+		
+		this.propertyCapacity = new HashMap<PropertyType, Integer>();
+		this.propertyCapacity.put(PropertyType.HOUSE, rents.get(PropertyType.HOUSE).length  );
+		this.propertyCapacity.put(PropertyType.HOTEL, rents.get(PropertyType.HOTEL).length  );
 		
 		this.propertyQuantity = new HashMap<PropertyType, Integer>();
 		this.propertyQuantity.put( PropertyType.HOUSE , 0 );
@@ -126,7 +144,38 @@ public class TerrainCard
 		return this.color;
 	}
 	
+	@Override
+	public String toString()
+	{
+		String output;
+		
+		output =
+			"Title: " + this.title + "\n" +
+			"ID   : " + this.id    + "\n" +
+			"Color: " + this.color + "\n" +
+			"Price: " + this.price + "\n" +
+			"PropPrice: " + this.propertyCost + "\n";
+		
+		PropertyType[] propertyTypes = new PropertyType[]{
+			PropertyType.HOUSE , 
+	        PropertyType.HOTEL 
+		};
+		
+		for( PropertyType type: propertyTypes )
+		{
+			output += type + ": [ ";
+			for( int value : this.rents.get(type) ) 
+			{
+				output += value + ", ";
+			}
+			output += "]\n";
+		}
+		
+		return output;		
+	}
 	
+
+
 	public CondRet addProperty( PropertyType type )
 			throws IllegalArgumentException
 	{
@@ -190,4 +239,6 @@ public class TerrainCard
 			return CondRet.PROPERTY_LIMIT_REACHED;
 		}
 	}
+
+	
 }

@@ -1,5 +1,7 @@
 package com.monopoly.game;
 
+import java.util.HashMap;
+
 public class ChanceCard
 	extends Card 	
 {
@@ -21,7 +23,21 @@ public class ChanceCard
 		GET_OUT_OF_JAIL,
 		GO_TO_START,
 		CHARGE_COMPETITORS,
-		NONE
+		NONE;
+		
+		public static HashMap<String,SideEffect> fromString;
+		
+		static 
+		{
+			fromString = new HashMap<String,SideEffect>();
+			
+			fromString.put( "GO_TO_JAIL"         , GO_TO_JAIL         );
+			fromString.put( "GET_OUT_OF_JAIL"    , GET_OUT_OF_JAIL    );
+			fromString.put( "GO_TO_START"        , GO_TO_START        );
+			fromString.put( "CHARGE_COMPETITORS" , CHARGE_COMPETITORS );
+			fromString.put( "NONE"               , NONE               );
+		}
+		
 	}
 		
 	public ChanceCard(String title, int id, String description, int amount, SideEffect effect)
@@ -29,11 +45,12 @@ public class ChanceCard
 	{
 		super(title, id);
 		
-		if( title == "SORTE" )
+		
+		if( title.equals( "SORTE" ))
 		{
 			this.isGood = true;
 		}			
-		else if ( title != "AZAR")
+		else if ( title.equals( "AZAR" ))
 		{
 			this.isGood = false;
 		}
@@ -80,5 +97,20 @@ public class ChanceCard
 		}
 		
 		this.hasOwner = v;
+	}
+	
+	public String toString()
+	{
+		String output;
+		
+		output =
+			"Title : " + this.title + "\n" +
+			"ID    : " + this.id    + "\n" +
+			"Descr.: " + this.description + "\n" +
+			"Amount: " + this.amount + "\n" +
+			"SideEffect: " + this.effect  + "\n"  +
+			"isGood    : " + this.isGood + "\n"; 
+		
+		return output;
 	}
 }
