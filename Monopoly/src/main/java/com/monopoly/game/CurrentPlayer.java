@@ -22,7 +22,7 @@ public class CurrentPlayer
 	{
 		this.player = p;
 		
-		setChanged();
 		notifyObservers( GAME_NEW_PLAYER );
+		setChanged();		
 	}
 }

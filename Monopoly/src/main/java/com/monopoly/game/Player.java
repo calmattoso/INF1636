@@ -10,6 +10,7 @@ public class Player
 	private PlayerColor pinColor;
 	private ArrayList<Card> ownedCards;
 	private int money;
+	private boolean jailPass;
 	
 	
 	public static enum PlayerColor {
@@ -48,6 +49,7 @@ public class Player
 		this.money = money;		
 		this.pinColor = pinColor;
 		this.ownedCards = new ArrayList<Card>();
+		this.jailPass = false;
 	}
 	
 	public Player()
@@ -63,21 +65,22 @@ public class Player
 		this.pinColor = p;
 	}
 	
-	public double getMoney(){
+	public int getMoney(){
 		return money;
 	}
 	
-	public void depositMoney( double ammount ){
+	public void updateMoney( int ammount ){
 		money += ammount;
-	}
-	
-	public void withdrawMoney( double ammount ){
-		money -= ammount;
 	}
 	
 	public ArrayList<Card> getOwnedCards()
 	{
 		return this.ownedCards;
+	}
+	
+	public void setJailPass( boolean v )
+	{
+		this.jailPass = true;
 	}
 	
 	public void addCard( Card newCard )

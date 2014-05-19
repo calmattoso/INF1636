@@ -45,9 +45,8 @@ public class CurrentPlayerView
 	}
 	
 	@Override
-	public void paintComponent(Graphics g)
-	{		
-		super.paintComponent(g);				
+	public void paint(Graphics g)
+	{						
 		Graphics2D g2d = (Graphics2D) g;
 		
 		// Obtém a string de cor
