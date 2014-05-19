@@ -65,12 +65,12 @@ public class BoardView
 	    spacesToCoordinates.put( Board.BoardSpaces.COPACABANA, new Point( 164 , 66 ));
 	    spacesToCoordinates.put( Board.BoardSpaces.COMPANHIA_DE_AVIACAO, new Point( 236 , 66 ));
 	    spacesToCoordinates.put( Board.BoardSpaces.AV_VIEIRA_SOUTO, new Point( 312 , 66 ));
-	    spacesToCoordinates.put( Board.BoardSpaces.AV_ATLÂNTICA, new Point( 386 , 66 ));
+	    spacesToCoordinates.put( Board.BoardSpaces.AV_ATLANTICA, new Point( 386 , 66 ));
 	    spacesToCoordinates.put( Board.BoardSpaces.COMPANHIA_DE_TAXI_AEREO, new Point( 462 , 66 ));
 	    spacesToCoordinates.put( Board.BoardSpaces.IPANEMA, new Point( 536 , 66 ));
 	    spacesToCoordinates.put( Board.BoardSpaces.SORTE6, new Point( 610 , 66 ));
 	    spacesToCoordinates.put( Board.BoardSpaces.JARDIM_PAULISTA, new Point( 684 , 66 ));
-	    spacesToCoordinates.put( Board.BoardSpaces.BROOKLYN, new Point( 760 , 72 ));
+	    spacesToCoordinates.put( Board.BoardSpaces.BROOKLIN, new Point( 760 , 72 ));
 	}
 	
 	public BoardView( int x , int y )
@@ -112,7 +112,6 @@ public class BoardView
 	{
 		return new Dimension( board.getIconWidth() , board.getIconHeight() );
 	}
-
 	
 	/**
 	 * 
