@@ -3,6 +3,11 @@ package com.monopoly.game;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+* This class implements the terrain cards. Terrains are properties that can be owned by players. In them, the player can build
+* houses and a hotel.
+*/
+
 public class TerrainCard
 	extends Card
 {
@@ -58,13 +63,30 @@ public class TerrainCard
 		}
 	}
 	
+	/**
+	* Possible return conditions
+	*/
+
 	public static enum CondRet
 	{
 		PROPERTY_LIMIT_REACHED,
 		PROPERTY_ADDED,
 		MISSING_REQUIREMENTS
 	}
-	
+
+	/**
+	* Terrain card constructor
+	*
+	*@param title 				The name of the terrain
+	*@param id 					The numeric id of the terrain
+	*@param propertyCost		The cost to build a property
+	*@param mortage 			The morgage cost
+	*@param price 				The price of the card
+	*@param baseRent 			The rent cost with no constructions
+	*@param color 				The color of the card
+	*@param rents 				The rent prices with 1-3 houses and a hotel
+	*@param PropertyCapacity 	The maximum ammount of properties
+	*/	
 
 	public TerrainCard(String title, int id, int propertyCost, int mortgage,
 					   int price, int baseRent, String color,
@@ -89,31 +111,69 @@ public class TerrainCard
 		this.propertyQuantity.put( PropertyType.HOTEL , 0 );		
 	}
 
+	/**
+	* Returns the cost of the property
+	*
+	*@return 		The cost of the property
+	*/
 	
 	public int getCost()
 	{
 		return propertyCost;
 	}
+
+	/**
+	* Returns the mortgage cost
+	*
+	*@return 		The mortgage cost
+	*/
 	
 	public int getMortgage() 
 	{
 		return mortgage;
 	}
+
+	/**
+	* Returns the price of the card
+	*
+	*@return 		The price of the card
+	*/
 	
 	public int getPrice()
 	{
 		return price;
 	}
+
+	/**
+	* Returns quantity of properties already in that terrain
+	*
+	*@return 		The quantity of properties
+	*/
 	
 	public int getPropertyQuantity( PropertyType type )
 	{
 		return propertyQuantity.get( type );
 	}
+
+	/**
+	* Returns the property capacity for hotels and houses
+	*
+	*@param type 	The type of property, which can be a house or a hotel
+	*@return 		The property capacity
+	*/
 	
 	public int getPropertyCapacity( PropertyType type )
 	{
 		return propertyCapacity.get( type );
 	}
+
+	/**
+	* Determine rent value based on what properties exist on the terrain,
+	* given their order of precedence. 
+	* If there are no properties, return the base rent value.
+	*
+	*@return 			The rent value
+	*/
 
 	public int getRent( )
 	{
@@ -139,6 +199,12 @@ public class TerrainCard
 		}
 	}
 	
+	/**
+	* Returns the color of the terrain card
+	*
+	*@return 			The color
+	*/
+
 	public Color getColor()
 	{
 		return this.color;
@@ -174,7 +240,13 @@ public class TerrainCard
 		return output;		
 	}
 	
-
+	/**
+	* Tries to build a property in that terrain
+	*
+	*@param type 		The type of property
+	*@return 			A condition indicating if the property was successfully added, if the terrain is full,
+	*					or if there were missing requirements
+	*/
 
 	public CondRet addProperty( PropertyType type )
 			throws IllegalArgumentException
@@ -192,6 +264,13 @@ public class TerrainCard
 		}
 	}
 	
+	/**
+	* Tries to build a Hotel in that terrain
+	*
+	*@return 			A condition indicating if the hotel was successfully added, if the terrain is full,
+	*					or if there were missing requirements
+	*/
+
 	private CondRet addHotel() {
 		int currentHotelQuantity = this.propertyQuantity.get( PropertyType.HOTEL ),
 			currentHouseQuantity = this.propertyQuantity.get( PropertyType.HOUSE ) ;	
@@ -220,6 +299,13 @@ public class TerrainCard
 			return CondRet.PROPERTY_LIMIT_REACHED;
 		}
 	}
+
+	/**
+	* Tries to build a House in that terrain
+	*
+	*@return 			A condition indicating if the house was successfully added, if the terrain is full,
+	*					or if there were missing requirements
+	*/
 
 	private CondRet addHouse()
 	{

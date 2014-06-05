@@ -19,6 +19,10 @@ import com.monopoly.game.Player;
 import com.monopoly.game.Board.BoardSpaces;
 import com.monopoly.game.Board.CardInfo;
 
+/**
+* This class controls the game , including players, movments, jail time, etc
+*/
+
 public class Game 
 	implements GameEvents 
 {
@@ -37,7 +41,12 @@ public class Game
 	private int[] doubleCount;
 	private int[] roundsInPrison;
 	private boolean[] isInPrison;
-	
+
+	/**
+	* Constructor of a new game of Monopoly
+	*
+	*@param numberOfPlayers 		The number of players in the current game
+	*/	
 
 	public Game(int numberOfPlayers) {
 		players = new Player[numberOfPlayers];
@@ -372,7 +381,7 @@ public class Game
 
 	/**
 	 * Execute one turn of movment for the current player, evaluating game rules.
-	 */
+	*/
 	public void evaluateMovement() {
 		Player currentPlayer = players[currentPlayerID];
 		Board.BoardSpaces position = currentPlayer.getPosition(), 
@@ -594,6 +603,10 @@ public class Game
 
 	}
 
+	/**
+	* Evaluates the Jail Status of the previous player, moving him to jail if necessary
+	*/
+
 	private void previousPlayerJailStatus( ) {
 		int playerID = ( ( currentPlayerID == 0 ) ? 
 			players.length - 1 : currentPlayerID - 1 
@@ -606,6 +619,12 @@ public class Game
 		}		
 	}
 
+	/**
+	* Creates a certain number of players
+	*
+	*@param numberOfPlayers 		The number of players to be created
+	*/
+
 	private void createPlayers(int numberOfPlayers) {
 		Player.PlayerColor color = Player.PlayerColor.BLACK;
 
@@ -616,23 +635,52 @@ public class Game
 		}
 	}
 
+	/**
+	* Ends the current player's turn, setting a new current player
+	*/
+
 	private void nextPlayer() {
 		currentPlayerID = (currentPlayerID + 1) % players.length;
 		currentPlayer.setPlayer( players[ currentPlayerID ] );
 	}
 
+	/**
+	* Returns the players of the current game
+	* 
+	*@return 			The set of players
+	*/
+
 	public Player[] getPlayers() {
 		return this.players;
 	}
 
+	/**
+	* Returns the dice
+	* 
+	*@return 			The dice
+	*/
+
 	public Dice getDice() {
 		return this.dice;
 	}
+
+	/**
+	* Returns the current player
+	* 
+	*@return 			The current player
+	*/
 	
 	public CurrentPlayer getCurrentPlayer()
 	{
 		return this.currentPlayer;
 	}
+
+	/**
+	* Sets the player free. If needed, makes the player pay a fine before leaving jail.
+	* 
+	*@param playerID 	The id of the player to be released
+	*@param fine 		Boolean indicating if the player needs to pay a fine in order to leave jail
+	*/
 
 	private void getOutOfJail( int playerID , boolean fine )
 	{
@@ -644,6 +692,12 @@ public class Game
 		roundsInPrison[ playerID ] = 0;
 		isInPrison[ playerID ] = false;
 	}
+
+	/**
+	* Moves player to jail.
+	*
+	*@param playerID 	The id of the player to put in jail
+	*/
 
 	private void goToJail( int playerID )
 	{

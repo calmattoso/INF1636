@@ -2,6 +2,11 @@ package com.monopoly.game;
 
 import java.util.HashMap;
 
+/**
+* This class implements the Chance Cards. Chance is one of the two types of card-drawing spaces in Monopoly. 
+* A Chance card is more likely to move players, often with lethal consequences. 
+*/
+
 public class ChanceCard
 	extends Card 	
 {
@@ -39,6 +44,15 @@ public class ChanceCard
 		}
 		
 	}
+
+	/** Chance Card constructor
+	*
+	*@param title		The title of the card
+	*@param id 			The numeric id of the card
+	*@param description A text describing what the card does
+	*@param amount 		The amount a player will receive or lose
+	*@param effect 		The side effect the card carries
+	*/
 		
 	public ChanceCard(String title, int id, String description, int amount, SideEffect effect)
 		throws IllegalArgumentException
@@ -64,25 +78,55 @@ public class ChanceCard
 		this.effect = effect;
 	}
 
+	/** 
+	* Returns the description of the card
+	*
+	*@return 		The description of the card
+	*/
+
 	public String getDescription()
 	{
 		return description;
 	}
+
+	/** 
+	* Returns if the card is good or not for the player
+	*
+	*@return 		True if the card is good for the player and false otherwise
+	*/
 
 	public boolean getIsGood()
 	{
 		return isGood;
 	}
 
+	/** 
+	* Returns the amount of the card
+	*
+	*@return 		The amount of the card
+	*/
+
 	public int getAmount()
 	{
 		return amount;
 	}
+
+	/** 
+	* Returns the side effect of the card
+	*
+	*@return 		The side effect of the card
+	*/
 	
 	public SideEffect getSideEffect()
 	{
 		return effect;
 	}
+
+	/**
+	* Sets the ownership status of the card
+	* 
+	*@param v 		boolean indicating if the card has or not an owner
+	*/
 
 	@Override
 	public void setHasOwner( boolean v )
