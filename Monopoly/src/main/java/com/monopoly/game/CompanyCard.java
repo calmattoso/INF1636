@@ -5,11 +5,11 @@ package com.monopoly.game;
 */
 
 public class CompanyCard 
-	extends Card
+	extends PropertyCard
 {
 	private int price;      // preço da carta
 	private int multiplier; // multiplicador 
-	private int mortgage;   // valor da hipoteca
+
 
 	/**
 	* Company Card constructor with specified parameters
@@ -53,17 +53,7 @@ public class CompanyCard
 		return multiplier;
 	}
 
-	/**
-	* Returns the mortgage cost of the card
-	*
-	*@return 		The mortgage cost
-	*/
-
-	public int getMortgage()
-	{
-		return mortgage;
-	}
-
+	
 	/**
 	* Returns the price of the card
 	*

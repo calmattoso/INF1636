@@ -9,7 +9,7 @@ import java.util.Map;
 */
 
 public class TerrainCard
-	extends Card
+	extends PropertyCard
 {
 	private Map<PropertyType, Integer> propertyCapacity; // quantidade máxima por propriedade	
 	private Map<PropertyType, Integer> propertyQuantity; // quantas propriedades de cada tipo
@@ -17,7 +17,6 @@ public class TerrainCard
 	
 	private int propertyCost; // custo de construção para casas e hoteis
 	private int baseRent;
-	private int mortgage; 	// valor da hipoteca
 	private int price; // custo de compra da carta
 	
 	private Color color;
@@ -71,7 +70,11 @@ public class TerrainCard
 	{
 		PROPERTY_LIMIT_REACHED,
 		PROPERTY_ADDED,
-		MISSING_REQUIREMENTS
+		MISSING_REQUIREMENTS,
+		REMOVAL_FAILED,
+		PROPERTY_REMOVED,
+		MORTGAGE_REPAID,
+		TRADE_SUCCESSFULL
 	}
 
 	/**
@@ -122,17 +125,7 @@ public class TerrainCard
 		return propertyCost;
 	}
 
-	/**
-	* Returns the mortgage cost
-	*
-	*@return 		The mortgage cost
-	*/
 	
-	public int getMortgage() 
-	{
-		return mortgage;
-	}
-
 	/**
 	* Returns the price of the card
 	*
@@ -147,6 +140,7 @@ public class TerrainCard
 	/**
 	* Returns quantity of properties already in that terrain
 	*
+	*@param type 	The type of the property
 	*@return 		The quantity of properties
 	*/
 	
@@ -325,6 +319,69 @@ public class TerrainCard
 			return CondRet.PROPERTY_LIMIT_REACHED;
 		}
 	}
+	
+	/**
+	 * Removes one property from the terrain
+	 * 
+	 * @param type	Type of the property	
+	 * @return		A return condition
+	 * @throws IllegalArgumentException
+	 */
+	public CondRet subProperty( PropertyType type )
+			throws IllegalArgumentException
+	{
+		switch( type )
+		{
+		case HOUSE:
+			return subHouse();			
+			
+		case HOTEL:
+			return subHotel();
+		
+		default:
+			throw new IllegalArgumentException("Invalid property type!");
+		}
+	}
+	/**
+	 * Removes a hotel from the terrain
+	 * 
+	 * @return		A return condition
+	 */
+	private CondRet subHotel() {
+		int currentHotelQuantity = this.propertyQuantity.get( PropertyType.HOTEL );	
+		
+		if( currentHotelQuantity == 0 )
+		{
+			return CondRet.REMOVAL_FAILED;
+		}			
+		else
+		{
+			this.propertyQuantity.put( PropertyType.HOTEL , currentHotelQuantity - 1 );
+			return CondRet.PROPERTY_REMOVED;
+		}
+	}
+	
+	/**
+ 	*Removes a house from the terrain
+ 	* 
+ 	* @return		A return condition
+ 	*/
+	private CondRet subHouse()
+	{
+		int currentHouseQuantity = this.propertyQuantity.get( PropertyType.HOUSE ),
+			currentHotelQuantity = this.propertyQuantity.get( PropertyType.HOTEL );
+		
 
+		if( currentHotelQuantity > 0 || currentHouseQuantity == 0 )
+		{
+			return CondRet.REMOVAL_FAILED;
+		}
+		else 
+		{	
+			this.propertyQuantity.put( PropertyType.HOUSE , currentHouseQuantity - 1 );
+			return CondRet.PROPERTY_REMOVED;
+		}
+	}
+	
 	
 }

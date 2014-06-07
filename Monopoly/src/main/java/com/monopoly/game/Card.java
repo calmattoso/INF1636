@@ -12,6 +12,7 @@ public class Card
 	protected int id;
 	protected String title;
 	protected boolean hasOwner;
+	protected Player owner;
 
 	/**
 	* Card constructor
@@ -57,5 +58,23 @@ public class Card
 	public void setHasOwner( boolean v )
 	{
 		hasOwner = v;
+	}
+	/**
+	 * Returns the owner of the card
+	 * 
+	 * @return 		The owner of the card
+	 */
+	public Player getOwner(){
+		return this.owner;
+	}
+	
+	/**
+	 * Sets the owner of the card
+	 * 
+	 * @param p		The owner of the card
+	 */
+	
+	public void setOwner(Player p){
+		this.owner = p;
 	}
 }
