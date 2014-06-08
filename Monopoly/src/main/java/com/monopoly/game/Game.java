@@ -802,5 +802,19 @@ public class Game
 		players[ playerID ].setInJail( true );
 	}
 
+	public boolean anyoneAlive(Player[] players){
+		for(Player p : players){
+			if(p.isAlive()==true)
+				return true;
+		}
+		return false;
+	}
 	
+	public boolean ownsAllColor(Player p, TerrainCard.Color color){
+		for(int i=0;i<terrainCardsDeck.size();i++){
+			if(terrainCardsDeck.get(i).getColor() == color && terrainCardsDeck.get(i).getOwner() != p)
+				return false;
+		}
+		return true;
+	}
 }
