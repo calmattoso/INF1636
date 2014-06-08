@@ -28,6 +28,7 @@ public class Game
 {
 	private Player[] players;
 	private Board board;
+	private Bank bank;
 	private int currentPlayerID;
 	
 	private HashMap<Integer,ChanceCard> chanceCardsDeck;
@@ -64,7 +65,9 @@ public class Game
 		players = new Player[numberOfPlayers];
 		createPlayers(numberOfPlayers);
 		
-		currentPlayerID = 0;		
+		currentPlayerID = 0;
+		
+		bank = Bank.getBank();
 		
 		/**
 		 * Load information about all cards.
@@ -404,6 +407,7 @@ public class Game
 		
 		// Calcula imediatamente a potencial próxima posição
 		nextPosition = position.getNext( dice.getSum() );
+		boolean roundTrip = position.roundTrip( dice.getSum());
 		
 		//se não for dupla
 		if( dice.getDie1() != dice.getDie2() )
@@ -424,7 +428,8 @@ public class Game
 				//reseta o contador de duplas, caso ele não esteja na prisão
 				doubleCount[currentPlayerID] = 0;
 				
-				currentPlayer.setPosition( nextPosition );
+				moveCurrentPlayer( nextPosition , roundTrip );
+				
 				checkLandingPosition();
 			}			
 
@@ -439,7 +444,8 @@ public class Game
 				// se o jogador estiver na prisão ele sai sem multa, anda e passa a vez
 				getOutOfJail( currentPlayerID , false );
 				
-				currentPlayer.setPosition( nextPosition );
+				moveCurrentPlayer( nextPosition , roundTrip );
+				
 				checkLandingPosition();
 				
 				nextPlayer();
@@ -459,15 +465,29 @@ public class Game
 				else
 				{
 					// se o jogador estiver com menos de 3 duplas, anda e joga novamente
-					currentPlayer.setPosition( nextPosition );
+					moveCurrentPlayer( nextPosition , roundTrip );
 					
 					checkLandingPosition();
 				}	
-			}
-			
+			}			
+		}		
+	}
+	
+	/**
+	 * Update the position of the current player. If the player has moved past
+	 *   the start, pay him/her 200 reais.
+	 * 
+	 * @param position
+	 * @param roundTrip
+	 */
+	private void moveCurrentPlayer( Board.BoardSpaces position , boolean roundTrip )
+	{
+		players[currentPlayerID].setPosition( position );
+		
+		if(roundTrip == true)
+		{
+			bank.payFees( players[currentPlayerID] );
 		}
-		
-		
 	}
 
 	/**
@@ -501,6 +521,7 @@ public class Game
 				"O jogador atual obteve:\n" + 
 				chanceCard.getTitle() + "\n" +
 				chanceCard.getDescription() + "\n";
+			System.out.println( output );
 			
 			if( chanceCard.getAmount() != 0 )
 				output += "Valor: " + Math.abs( chanceCard.getAmount()) + "\n"; 
@@ -614,7 +635,6 @@ public class Game
 	/**
 	* Evaluates the Jail Status of the previous player, moving him to jail if necessary
 	*/
-
 	private void previousPlayerJailStatus( ) {
 		int playerID = ( ( currentPlayerID == 0 ) ? 
 			players.length - 1 : currentPlayerID - 1 
@@ -632,7 +652,6 @@ public class Game
 	*
 	*@param numberOfPlayers 		The number of players to be created
 	*/
-
 	private void createPlayers(int numberOfPlayers) {
 		Player.PlayerColor color = Player.PlayerColor.BLACK;
 
@@ -646,7 +665,6 @@ public class Game
 	/**
 	* Ends the current player's turn, setting a new current player
 	*/
-
 	private void nextPlayer() {
 		currentPlayerID = (currentPlayerID + 1) % players.length;
 		
@@ -659,7 +677,6 @@ public class Game
 	* 
 	*@return 			The set of players
 	*/
-
 	public Player[] getPlayers() {
 		return this.players;
 	}

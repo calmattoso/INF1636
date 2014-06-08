@@ -79,8 +79,31 @@ public class Board {
 			fromString.put( "BROOKLIN"                 ,  BROOKLIN                  );               
 		}
 		
-		public BoardSpaces getNext( int offset ) {
+		/**
+		 * Returns the enum value ahead offset units from the current one.
+		 * 
+		 * @param offset Number of values ahead of current one.
+		 * @return Next position
+		 */
+		public BoardSpaces getNext( int offset )
+		{
 			return values()[ (ordinal() + offset ) % values().length ];
+		}
+
+		/**
+		 * Returns if the enum value offset units ahead from the current one
+		 *   is past or equal to INICIO.
+		 * 
+		 * @param offset
+		 * @return true or false
+		 */
+		public boolean roundTrip(int offset)
+		{
+			if( ((ordinal() + offset ) % values().length) <= ordinal() )
+			{
+				return true;
+			}			
+			return false;
 		}		
 	}
 	
