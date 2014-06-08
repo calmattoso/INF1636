@@ -35,8 +35,6 @@ public class Game
 	private HashMap<Integer,CompanyCard> companyCardsDeck;
 	private HashMap<Integer,TerrainCard> terrainCardsDeck;
 	
-	private boolean onActiveCard;
-	
 	private Dice dice;	
 	private Random cardPicker = new Random();
 	
@@ -51,8 +49,6 @@ public class Game
 	*/	
 
 	public Game(int numberOfPlayers) {
-		this.onActiveCard = false;
-		
 		dice = new Dice(6);
 		
 		/**
@@ -89,6 +85,16 @@ public class Game
 	
 	public Game() {
 		this(2);
+	}
+	
+	public Card getCompanyCard(int id)
+	{
+		return this.companyCardsDeck.get(id);
+	}
+	
+	public Card getTerrainCard(int id)
+	{
+		return this.terrainCardsDeck.get(id);
 	}
 
 	/**
@@ -664,7 +670,6 @@ public class Game
 		{
 			switch(  currentPlayer.getPosition() )
 			{
-
 			case IMPOSTO:
 				currentPlayer.updateMoney(-200);
 				JOptionPane.showMessageDialog(null, "A Receita te tomou R$200 em impostos...");
