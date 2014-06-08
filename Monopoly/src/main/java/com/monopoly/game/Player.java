@@ -176,7 +176,7 @@ public class Player
 	/**
 	* Adds a card to the player's list of owned cards
 	*
-	*@param newCard			The new card to be added
+	*@param newCard	The new card to be added
 	*/
 
 	public void addCard( Card newCard )
@@ -192,6 +192,24 @@ public class Player
 		}
 		
 		this.ownedCards.add( newCard );
+	}
+	
+	/**
+	 * Remove card from the player's deck (if it exists there).
+	 * 
+	 * @param card
+	 * @throws IllegalArgumentException
+	 */
+	public void removeCard( Card card )
+			throws IllegalArgumentException
+	{
+		if( card.getOwner() != this ||
+			this.ownedCards.contains(card) == false )
+		{
+			throw new IllegalArgumentException("Card not owned by this player!");
+		}
+		
+		this.ownedCards.remove( card );
 	}
 
 	/**
