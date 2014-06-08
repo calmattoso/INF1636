@@ -168,6 +168,8 @@ public class Bank {
 		p1.updateMoney((int)(-(money + card.getMortgage()*0.2)));
 		card.setMortgage(false);
 		p2.updateMoney(money);
+		p2.removeCard(card);
+		p1.addCard(card);
 		card.setOwner(p1);
 		return CondRet.TRADE_SUCCESSFULL;	
 	}
@@ -223,6 +225,10 @@ public class Bank {
 		if(card2 instanceof TerrainCard)
 			Bank.getBank().sellAllProperties((TerrainCard)card2);
 		
+		p1.removeCard(card1);
+		p2.removeCard(card2);
+		p1.addCard(card2);
+		p2.addCard(card1);
 		card1.setOwner(p2);
 		card2.setOwner(p1);
 		
@@ -243,6 +249,7 @@ public class Bank {
 	private CondRet sellCompany(CompanyCard c)
 	{
 		c.getOwner().updateMoney(c.getPrice()/2);
+		c.getOwner().removeCard(c);
 		c.setHasOwner(false);
 		c.setOwner(null);
 		return CondRet.TRADE_SUCCESSFULL;
@@ -255,6 +262,7 @@ public class Bank {
 				this.sellAllProperties(t);
 			}
 		t.getOwner().updateMoney(t.getPrice()/2);
+		t.getOwner().removeCard(t);
 		t.setHasOwner(false);
 		t.setOwner(null);
 		return CondRet.TRADE_SUCCESSFULL;
