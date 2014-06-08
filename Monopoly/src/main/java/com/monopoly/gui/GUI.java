@@ -63,7 +63,7 @@ public class GUI
 		
 		diceView = new DiceView( this.width/2 - 40 , 45 );
 		
-		currentPlayerView = new CurrentPlayerView( 10 , 10 , 480, this.height - 45);
+		currentPlayerView = new CurrentPlayerView( 10 , 5 , 475, this.height - 215);
 		playersBalanceView = new PlayersBalanceView( this.width/2 + 470 , 10, 220, this.height/2 - 45 , numberOfPlayers );
 		
 	}

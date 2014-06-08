@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.RenderingHints;
@@ -53,8 +52,8 @@ public class CurrentPlayerView
 	private static final long serialVersionUID = 7970826428341424057L;
 	private static final short COMPANY_CARDS_GRID_WIDTH   = 6;
 	private static final short COMPANY_CARDS_GRID_HEIGHT  = 1;
-	private static final short TERRAIN_CARDS_GRID_WIDTH   = 5;
-	private static final short TERRAIN_CARDS_GRID_HEIGHT  = 5;
+	private static final short TERRAIN_CARDS_GRID_WIDTH   = 6;
+	private static final short TERRAIN_CARDS_GRID_HEIGHT  = 4;
 	
 	private Player player;
 	
@@ -94,7 +93,7 @@ public class CurrentPlayerView
 		 */
 		companyCardsPanel = new JPanel();		
 		terrainCardsPanel = new JPanel();
-		terrainCardsPanel.setPreferredSize(new Dimension(width, height/2 + 190));		
+		terrainCardsPanel.setPreferredSize(new Dimension(width, height/2 + 120));		
 
 		this.add(currentPlayer, BorderLayout.NORTH );
 		this.add(companyCardsPanel, BorderLayout.CENTER);
@@ -254,14 +253,20 @@ public class CurrentPlayerView
 	private void cleanGrids() {
 		for(int i = 0; i < COMPANY_CARDS_GRID_HEIGHT; ++i)
 			for(int j = 0; j < COMPANY_CARDS_GRID_WIDTH; ++j)
-				this.companyCardsGrid[i][j].setIcon(null);		
+			{
+				this.companyCardsGrid[i][j].setIcon(null);
+				this.companyCardsGrid[i][j].setEnabled(false);
+			}
 		
 		/**
 		 * Set up terrain cards grid.
 		 */
 		for(int i = 0; i < TERRAIN_CARDS_GRID_HEIGHT; ++i)
 			for(int j = 0; j < TERRAIN_CARDS_GRID_WIDTH; ++j)
-				this.terrainCardsGrid[i][j].setIcon(null);	
+			{
+				this.terrainCardsGrid[i][j].setIcon(null);
+				this.terrainCardsGrid[i][j].setEnabled(false);
+			}
 	}
 
 	/**
@@ -283,7 +288,6 @@ public class CurrentPlayerView
 				cardButton.setBorderPainted(false);
 				cardButton.setEnabled(false);
 				
-				cardButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 				
 				cardButton.setActionCommand( GUI_BTN_COMPANY_CARD );
 				cardButton.addActionListener( controller );
