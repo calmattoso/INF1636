@@ -6,6 +6,7 @@ package com.monopoly;
 import javax.swing.SwingUtilities;
 
 import com.monopoly.game.GameController;
+import com.monopoly.game.Music;
 
 
 public class MonopolyApp 
@@ -15,6 +16,7 @@ public class MonopolyApp
 	 */
 	public static void main(String[] args) {
 		final int numberOfPlayers = 6;
+		final Music BGM = new Music();
 		
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() 
@@ -22,7 +24,13 @@ public class MonopolyApp
             	new GameController( numberOfPlayers );
             }
         });
-		
+		SwingUtilities.invokeLater(new Runnable() {
+            public void run() 
+            {
+            	BGM.playMusic("src/main/resources/music/monopoly.wav");
+            }
+            
+        });
 		
 		
 	}
