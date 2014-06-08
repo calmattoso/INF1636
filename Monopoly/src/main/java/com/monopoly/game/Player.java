@@ -243,4 +243,9 @@ public class Player
 		return true;
 	}
 	
+	public String toString()
+	{
+		return this.pinColor.toString;
+	}
+	
 }
