@@ -6,7 +6,7 @@
     <type>none</type>
   </cardInfo>
   <cardInfo>
-    <cardID>19</cardID>
+    <cardID>20</cardID>
     <position>LEBLON</position>
     <type>terrain</type>
   </cardInfo>
@@ -16,12 +16,12 @@
     <type>chance</type>
   </cardInfo>
   <cardInfo>
-    <cardID>8</cardID>
+    <cardID>9</cardID>
     <position>AV_PRESIDENTE_VARGAS</position>
     <type>terrain</type>
   </cardInfo>
   <cardInfo>
-    <cardID>5</cardID>
+    <cardID>6</cardID>
     <position>AV_NOSSA_S_DE_COPACABANA</position>
     <type>terrain</type>
   </cardInfo>
@@ -41,7 +41,7 @@
     <type>company</type>
   </cardInfo>
   <cardInfo>
-    <cardID>9</cardID>
+    <cardID>10</cardID>
     <position>AV_REBOUCAS</position>
     <type>terrain</type>
   </cardInfo>
@@ -66,12 +66,12 @@
     <type>chance</type>
   </cardInfo>
   <cardInfo>
-    <cardID>21</cardID>
+    <cardID>22</cardID>
     <position>RUA_AUGUSTA</position>
     <type>terrain</type>
   </cardInfo>
   <cardInfo>
-    <cardID>6</cardID>
+    <cardID>7</cardID>
     <position>AV_PACAEMBU</position>
     <type>terrain</type>
   </cardInfo>
@@ -86,7 +86,7 @@
     <type>chance</type>
   </cardInfo>
   <cardInfo>
-    <cardID>15</cardID>
+    <cardID>16</cardID>
     <position>INTERLAGOS</position>
     <type>terrain</type>
   </cardInfo>
@@ -96,7 +96,7 @@
     <type>none</type>
   </cardInfo>
   <cardInfo>
-    <cardID>20</cardID>
+    <cardID>21</cardID>
     <position>MORUMBI</position>
     <type>terrain</type>
   </cardInfo>
@@ -106,7 +106,7 @@
     <type>none</type>
   </cardInfo>
   <cardInfo>
-    <cardID>14</cardID>
+    <cardID>15</cardID>
     <position>FLAMENGO</position>
     <type>terrain</type>
   </cardInfo>
@@ -116,7 +116,7 @@
     <type>chance</type>
   </cardInfo>
   <cardInfo>
-    <cardID>11</cardID>
+    <cardID>12</cardID>
     <position>BOTAFOGO</position>
     <type>terrain</type>
   </cardInfo>
@@ -141,12 +141,12 @@
     <type>chance</type>
   </cardInfo>
   <cardInfo>
-    <cardID>7</cardID>
+    <cardID>8</cardID>
     <position>AV_PAULISTA</position>
     <type>terrain</type>
   </cardInfo>
   <cardInfo>
-    <cardID>17</cardID>
+    <cardID>18</cardID>
     <position>JARDIM_EUROPA</position>
     <type>terrain</type>
   </cardInfo>
@@ -156,7 +156,7 @@
     <type>none</type>
   </cardInfo>
   <cardInfo>
-    <cardID>13</cardID>
+    <cardID>14</cardID>
     <position>COPACABANA</position>
     <type>terrain</type>
   </cardInfo>
@@ -166,7 +166,7 @@
     <type>company</type>
   </cardInfo>
   <cardInfo>
-    <cardID>10</cardID>
+    <cardID>11</cardID>
     <position>AV_VIEIRA_SOUTO</position>
     <type>terrain</type>
   </cardInfo>
@@ -181,7 +181,7 @@
     <type>company</type>
   </cardInfo>
   <cardInfo>
-    <cardID>16</cardID>
+    <cardID>17</cardID>
     <position>IPANEMA</position>
     <type>terrain</type>
   </cardInfo>
@@ -191,12 +191,12 @@
     <type>chance</type>
   </cardInfo>
   <cardInfo>
-    <cardID>18</cardID>
+    <cardID>19</cardID>
     <position>JARDIM_PAULISTA</position>
     <type>terrain</type>
   </cardInfo>
   <cardInfo>
-    <cardID>12</cardID>
+    <cardID>13</cardID>
     <position>BROOKLIN</position>
     <type>terrain</type>
   </cardInfo>
