@@ -37,7 +37,6 @@ public class Bank {
 	
 	public void mortgage(PropertyCard c){
 		 if (c instanceof TerrainCard)
-			 // funciona essa conversão de terrain pra carta e carta pra terrain?
 			 Bank.getBank().mortgageTerrain((TerrainCard)c);
 		 else if (c instanceof CompanyCard)
 			 Bank.getBank().mortgageCompany((CompanyCard)c);
