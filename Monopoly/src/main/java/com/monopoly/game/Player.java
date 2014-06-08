@@ -9,12 +9,14 @@ import java.util.Observable;
 
 public class Player 
 	extends Observable
+	implements GameEvents
 {
 	private Board.BoardSpaces position;
 	private PlayerColor pinColor;
 	private ArrayList<Card> ownedCards;
 	private int money;
 	private boolean jailPass;
+	private boolean inJail;
 	
 	/**
 	* This is the list of colors available for player pins. Each player is represented by one pin. All pins in an ongoing game
@@ -76,7 +78,9 @@ public class Player
 		this.money = money;		
 		this.pinColor = pinColor;
 		this.ownedCards = new ArrayList<Card>();
+		
 		this.jailPass = false;
+		this.inJail   = false;
 	}
 
 	/**
@@ -124,8 +128,11 @@ public class Player
 	*@param amount 			The amount of money
 	*/
 	
-	public void updateMoney( int ammount ){
-		money += ammount;
+	public void updateMoney( int amount ){
+		money += amount;
+		
+		this.setChanged();
+		this.notifyObservers( GAME_PLAYER_BALANCE_UPDATED );
 	}
 
 	/**
@@ -140,14 +147,30 @@ public class Player
 	}
 
 	/**
-	* Sets the jailPass status of a player
+	* Sets the jail pass ownership status of a player
 	*
-	*@param v 				Boolen indicating if the player posesses or not a Jail Pass
+	* @param v Boolean indicating if the player posesses or not a Jail Pass
 	*/
 	
 	public void setJailPass( boolean v )
 	{
 		this.jailPass = true;
+	}
+	
+	/**
+	* Sets the jailPass status of a player
+	*
+	* @param v Boolean indicating if the player owns or not a Jail Pass
+	*/
+	
+	public boolean hasJailPass( )
+	{
+		return this.jailPass;
+	}
+	
+	public boolean isInJail()
+	{
+		return this.inJail;
 	}
 	
 	/**
@@ -191,8 +214,33 @@ public class Player
 	public void setPosition( Board.BoardSpaces newPosition )
 	{
 		this.position = newPosition;
+		
 		this.setChanged();				
 		this.notifyObservers( this.position );	
+	}
+	
+	/**
+	 * Sets the player to be in/out of jail.
+	 * 
+	 * @param b New status for player's jail status
+	 */
+	public void setInJail(boolean b) {
+		this.inJail = b;		
+	}
+	
+	/**
+	 * Check if player is or is not bankrupt.
+	 * 
+	 * @return Ret
+	 */
+	public boolean isAlive()
+	{
+		if( this.money <= 0 )
+		{
+			return false;
+		}
+		
+		return true;
 	}
 	
 }

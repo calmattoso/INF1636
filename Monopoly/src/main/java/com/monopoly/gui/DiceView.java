@@ -1,10 +1,10 @@
 package com.monopoly.gui;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.RenderingHints;
-
 import java.util.Observable;
 import java.util.Observer;
 
@@ -24,7 +24,8 @@ public class DiceView
 		die1 = 0;
 		die2 = 0;
 		
-		this.setBounds( x , y , 300, 20 ) ;
+		this.setBounds( x , y , 270, 20 ) ;
+		this.setOpaque(false);
 	}
 
 	public void update(Observable dices, Object event) {
@@ -58,7 +59,8 @@ public class DiceView
         rh.put( RenderingHints.KEY_RENDERING ,
         		RenderingHints.VALUE_RENDER_QUALITY );
         
-        g2d.setFont( new Font("Times New Roman", Font.BOLD, 16) );
+        g2d.setFont( new Font("Comic Sans", Font.BOLD, 14) );
+        g2d.setColor( new Color(22,0,127));
                
         g2d.setRenderingHints(rh);        
         g2d.drawString("Turno Anterior - Dado 1: " + String.valueOf( die1 ) + " | Dado 2: " + String.valueOf( die2 ) , 12, 12);

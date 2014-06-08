@@ -30,8 +30,8 @@ public class PlayerPinView
 		
 		// Adiciona um pequeno offset aleatório em torno da posição real do pin, para que
 		//  evite-se overlap.
-		this.jitterOffset = new Point( (int) ((Math.random() - 0.5) * 25),
-									   (int) ((Math.random() - 0.5) * 25) );
+		this.jitterOffset = new Point( (int) ((Math.random() - 0.5) * 10),
+									   (int) ((Math.random() - 0.5) * 10) );
 		
 		// Carrega o pino correto a ser exibido dada a cor do jogador
 		loadPinImage( Player.PlayerColor.colorToString( p.getPinColor() ) );
@@ -73,7 +73,7 @@ public class PlayerPinView
 	
 	private void loadPinImage( String pinColor )
 	{
-		String path = "src/main/resources/pins/" + pinColor + "_pin.png";
+		String path = "src/main/resources/pins/" + pinColor.toLowerCase() + "_pin.png";
 		
 		pin = new ImageIcon(path);
 	}

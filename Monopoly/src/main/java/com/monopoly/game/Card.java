@@ -27,6 +27,16 @@ public class Card
 		this.id = id;
 		this.hasOwner = false;
 	}
+	
+	/**
+	* Returns the id of a card
+	* 
+	*@return ID of the card
+	*/
+	
+	public int getID(){
+		return id;
+	}
 
 	/**
 	* Returns the title of a card

@@ -2,6 +2,7 @@ package com.monopoly.game;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Observable;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
@@ -16,20 +17,19 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.monopoly.game.Player;
-import com.monopoly.game.Board.BoardSpaces;
-import com.monopoly.game.Board.CardInfo;
 
 /**
 * This class controls the game , including players, movments, jail time, etc
 */
 
 public class Game 
+	extends Observable
 	implements GameEvents 
 {
 	private Player[] players;
 	private Board board;
 	private int currentPlayerID;
-	private CurrentPlayer currentPlayer; // Torna possível observar quem é o atual jogador
+	
 	private HashMap<Integer,ChanceCard> chanceCardsDeck;
 	private HashMap<Integer,CompanyCard> companyCardsDeck;
 	private HashMap<Integer,TerrainCard> terrainCardsDeck;
@@ -37,6 +37,7 @@ public class Game
 	private boolean onActiveCard;
 	
 	private Dice dice;	
+	private Random cardPicker = new Random();
 	
 	private int[] doubleCount;
 	private int[] roundsInPrison;
@@ -49,20 +50,25 @@ public class Game
 	*/	
 
 	public Game(int numberOfPlayers) {
-		players = new Player[numberOfPlayers];
-		createPlayers(numberOfPlayers);
-		
 		this.onActiveCard = false;
 		
+		dice = new Dice(6);
+		
+		/**
+		 * Information to control prison sentences 
+		 */
 		doubleCount    = new int[numberOfPlayers];
 		roundsInPrison = new int[numberOfPlayers];
 		isInPrison 	   = new boolean[numberOfPlayers];
 
-		currentPlayerID = 0;
-		currentPlayer = new CurrentPlayer( players[ currentPlayerID ] );
-
-		dice = new Dice(6);
+		players = new Player[numberOfPlayers];
+		createPlayers(numberOfPlayers);
 		
+		currentPlayerID = 0;		
+		
+		/**
+		 * Load information about all cards.
+		 */
 		chanceCardsDeck = new HashMap<Integer,ChanceCard>();
 		companyCardsDeck = new HashMap<Integer,CompanyCard>();
 		terrainCardsDeck = new HashMap<Integer,TerrainCard>();
@@ -72,6 +78,9 @@ public class Game
 		loadCompanyCards("src/main/config/cards.xml");
 		loadChanceCards("src/main/config/cards.xml");
 		
+		/**
+		 * Set up the board.
+		 */
 		this.board = new Board("src/main/config/board.xml");
 	}
 	
@@ -380,7 +389,7 @@ public class Game
 	}
 
 	/**
-	 * Execute one turn of movment for the current player, evaluating game rules.
+	 * Execute one turn of movement for the current player, evaluating game rules.
 	*/
 	public void evaluateMovement() {
 		Player currentPlayer = players[currentPlayerID];
@@ -480,14 +489,13 @@ public class Game
 			currentPlayer.getPosition() );
 		
 		
-		System.out.println("Current card: ");
+		System.out.println("Current card: " + card.getType() );
 		/**
 		 * Choose a random card and inform the player about what has happened.
 		 */
 		if( card.getType().equals("chance"))
 		{
-			Random rand = new Random();
-			int id = rand.nextInt(this.chanceCardsDeck.size());
+			int id = cardPicker.nextInt(this.chanceCardsDeck.size());
 			ChanceCard chanceCard = this.chanceCardsDeck.get(id);
 			String output = 
 				"O jogador atual obteve:\n" + 
@@ -630,7 +638,7 @@ public class Game
 
 		for (int i = 0; i < numberOfPlayers; ++i) {
 			players[i] = new Player(Board.BoardSpaces.INICIO, 2458 , color);
-
+			
 			color = color.getNext();
 		}
 	}
@@ -641,7 +649,9 @@ public class Game
 
 	private void nextPlayer() {
 		currentPlayerID = (currentPlayerID + 1) % players.length;
-		currentPlayer.setPlayer( players[ currentPlayerID ] );
+		
+		this.setChanged();
+		this.notifyObservers( GAME_NEW_PLAYER );		
 	}
 
 	/**
@@ -667,12 +677,21 @@ public class Game
 	/**
 	* Returns the current player
 	* 
-	*@return 			The current player
-	*/
-	
-	public CurrentPlayer getCurrentPlayer()
+	*@return The current player
+	*/	
+	public Player getCurrentPlayer()
 	{
-		return this.currentPlayer;
+		return this.players[ this.currentPlayerID ];
+	}
+	
+	/**
+	* Returns the current player
+	* 
+	*@return The current player
+	*/	
+	public int getCurrentPlayerID()
+	{
+		return this.currentPlayerID;
 	}
 
 	/**
@@ -682,7 +701,7 @@ public class Game
 	*@param fine 		Boolean indicating if the player needs to pay a fine in order to leave jail
 	*/
 
-	private void getOutOfJail( int playerID , boolean fine )
+	public void getOutOfJail( int playerID , boolean fine )
 	{
 		if(fine == true)
 		{
@@ -691,6 +710,7 @@ public class Game
 		
 		roundsInPrison[ playerID ] = 0;
 		isInPrison[ playerID ] = false;
+		players[ playerID ].setInJail( false );
 	}
 
 	/**
@@ -703,7 +723,9 @@ public class Game
 	{
 		doubleCount[ playerID ] = 0;
 		isInPrison[ playerID ] = true ;
+		
 		players[ playerID ].setPosition( Board.BoardSpaces.PRISAO );
+		players[ playerID ].setInJail( true );
 	}
 
 	

@@ -3,29 +3,29 @@
  */
 package com.monopoly.gui;
 
-import com.monopoly.game.CurrentPlayer;
 import com.monopoly.game.Dice;
+import com.monopoly.game.Game;
 import com.monopoly.game.Player;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
-import java.util.Observable;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
 public class GUI 
-	extends Observable
-	implements ActionListener, GUIEvents
+	implements GUIEvents
 {	
 	// Propriedades da janela
 	private JFrame viewPort;
 	private JLayeredPane layers;
+	private ImagePanel background;
 	private String title;	
 	private int width, height;
 	
@@ -34,31 +34,75 @@ public class GUI
 	private PlayerPinView[] playerPins;
 	private DiceView diceView;
 	private CurrentPlayerView currentPlayerView;
+	private PlayersBalanceView playersBalanceView;
 	
 	// Botão para lançar os dados
 	private JButton rollDice;
+	private JButton useJailPass;
+
+	// Jail pass button controller, checks all rules, et al.
+	private JailPassController useJailPassController;
 	
-	public GUI( String title , Dimension d , int numberOfPlayers )
+	
+	public GUI( String title , Dimension d , int numberOfPlayers , ActionListener actionListener )
 	{
 		// Propriedades da janela
 		this.title = title;		
 		this.width  = (int) d.getWidth();
 		this.height = (int) d.getHeight();
 		
+		ImageIcon backgroundImage = new ImageIcon("src/main/resources/background.png");
+		this.background = new ImagePanel( backgroundImage );
+				
 		viewPort = new JFrame();		
 		layers = new JLayeredPane();
 		
 		// Criação das entidades do jogo
-		board = new BoardView( 50 , 50 );
+		board = new BoardView( 490 , 80 );
 		playerPins = new PlayerPinView[ numberOfPlayers ];	
-		diceView = new DiceView( this.width/2 - 120 , 30 );
-		currentPlayerView = new CurrentPlayerView(this.width/2 - 80 , 10);
 		
-		// Criação do menu de controle do jogo
-		rollDice = new JButton("Roll Dice");
-		rollDice.setBounds(5, 5, 110, 30);
+		diceView = new DiceView( this.width/2 - 40 , 45 );
+		
+		currentPlayerView = new CurrentPlayerView( 10 , 10 , 480, this.height - 45);
+		playersBalanceView = new PlayersBalanceView( this.width/2 + 470 , 10, 220, this.height/2 - 45 , numberOfPlayers );
+		
+	}
+	
+	/**
+	 * Configures the UI buttons.
+	 * 
+	 * @param actionListener Controller responsible for handling button clicks
+	 * @param game The game model
+	 */
+	public void setUpControls( ActionListener actionListener , Game game )
+	{
+		/**
+		 * Set up Roll dice controls
+		 */
+		ImageIcon rollDiceIcon = new ImageIcon("src/main/resources/dice.png");
+		rollDice = new CustomButton( "Roll Dice", rollDiceIcon , this.width/2 - 155 , 25 );		
 		rollDice.setActionCommand( GUI_BTN_DICE_ROLLED );
-		rollDice.addActionListener( this );
+		rollDice.addActionListener( actionListener );
+		
+		/**
+		 * Set up Jail pass controls
+		 */
+		ImageIcon jailPassIcon = new ImageIcon("src/main/resources/unlock.png");
+		useJailPass = new CustomButton( "Use Jail Pass", jailPassIcon);		
+		useJailPass.setActionCommand( GUI_BTN_JAIL_PASS );
+		
+		this.useJailPassController = new JailPassController( useJailPass );
+		useJailPass.addActionListener( useJailPassController );
+		useJailPass.addActionListener( actionListener );
+		
+		useJailPass.setBounds( this.width/2 + 250 , 25 , 130 , 50 );		
+		
+		/**
+		 * The jail pass controller observers the game to enable the button
+		 *   when necessary.
+		 */
+		game.addObserver( this.useJailPassController );
+		
 	}
 	
 	/**
@@ -68,9 +112,10 @@ public class GUI
 	 */
 	public void setUpPlayerPinViews( Player[] players )
 	{
+		
 		for( int i = 0 ; i < players.length ; ++i )
 		{
-			playerPins[ i ] = new PlayerPinView( players[ i ] , new Point( 25 , 25 ) );
+			playerPins[ i ] = new PlayerPinView( players[ i ] , new Point( 480 , 45 ) );
 			
 			players[ i ].addObserver( playerPins[ i ] );
 		}
@@ -86,9 +131,34 @@ public class GUI
 		d.addObserver( diceView );
 	}
 
-	public void setUpCurrentPlayer(CurrentPlayer currentPlayer) {
-		currentPlayerView.setCurrentPlayer( currentPlayer );		
+	/**
+	 * Set's up the view that shows all relevante information about the current player
+	 * In order to do that, it observes the Game model.
+	 * 
+	 * @param game Game model.
+	 */
+	public void setUpCurrentPlayerView( Game game , ActionListener controller ) {
+		currentPlayerView.setCurrentPlayer( game.getCurrentPlayer() );
+		currentPlayerView.setupCardsGrids( controller );
+		game.addObserver( currentPlayerView );			
 	}
+	
+	/**
+	 * Set's up the view that shows for each player its bank balance. 
+	 * It also clearly indicates when a player has gone bankrupt.
+	 * In order to do that, it observes the Game model.
+	 * 
+	 * @param game Game model.
+	 */
+	public void setUpPlayersBalanceView( Player[] players ) {
+		for( Player p: players )
+		{
+			p.addObserver( this.playersBalanceView );
+			
+			this.playersBalanceView.setPlayerBalance( p );
+		}
+	}
+	
 	
 	/**
 	 * Encapsula adição de novas entidade gráficas ao JLayeredPane usado para controle
@@ -123,6 +193,8 @@ public class GUI
 		
 		viewPort.setTitle( this.title );
 		
+		viewPort.setIconImage(Toolkit.getDefaultToolkit().getImage("src/main/resources/icon.png"));
+		
 		viewPort.getContentPane().add( layers , BorderLayout.CENTER );
 		
 		viewPort.setVisible( false );		 
@@ -138,47 +210,33 @@ public class GUI
 
 
 	/**
-	 * Usado para enviar mensagens para o controlador do jogo. (Game.java)
-	 * Lida com algum evento gerado pelo usuário ao interagir com a GUI.
-	 * 	Em geral, cliques em botões [TODO: ou valores em caixa de texto]
-	 * 
-	 * @param event
-	 */
- 	public void actionPerformed( ActionEvent event ) {
-		String message = event.getActionCommand();
-		
-		if( message == GUI_BTN_DICE_ROLLED )
-		{	
-			System.out.println("Dice rolled");
-			
-			this.notifyObservers( GUI_BTN_DICE_ROLLED );
-			this.setChanged();
-		}
-	}
-	
-	/**
 	 * Adiciona todas as entidades gráficas na tela, antes desta ser 
 	 * 	propriamente configurada.
 	 * 
 	 */
 	private void setUpGraphicalComponents() {
+		this.addComponent(background, 0, 0);
+		
 		// Adiciona a board
-		this.addComponent(board, 0, 1);
+		this.addComponent(board, 1, 0);
 		
 		// Adiciona os jogadores
 		for( int i = 0 ; i < this.playerPins.length ; ++i )
 		{
-			this.addComponent( playerPins[i] , 1 , i+1 );
+			this.addComponent( playerPins[i] , 2 , i+1 );
 		}					
 		
-		// Adiciona o botão de jogar dados
-		this.addComponent( rollDice , 2 , 1 );
+		// Adiciona os botões
+		this.addComponent( rollDice    , 2 , 1 );
+		this.addComponent( useJailPass , 2 , 2 );
 		
 		// Adiciona a view dos dados
 		this.addComponent( diceView , 3 , 1 );
 		
 		// Adiciona a view do jogador atual
 		this.addComponent( currentPlayerView , 4 , 1 );
+		
+		this.addComponent( playersBalanceView, 5, 1);
 	}
 	
 }
