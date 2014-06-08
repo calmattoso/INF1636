@@ -656,6 +656,31 @@ public class Game
 						" pagou R$" + terrainCard.getRent() + " ao jogador " + owner.getPinColor().toString());
 			}
 		}
+		/**
+		 * The player has landed on a non-active card, so check for special positions.
+		 * OBS: The go to jail effect has already been applied by this point.
+		 */
+		else 
+		{
+			switch(  currentPlayer.getPosition() )
+			{
+
+			case IMPOSTO:
+				currentPlayer.updateMoney(-200);
+				JOptionPane.showMessageDialog(null, "A Receita te tomou R$200 em impostos...");
+				break;
+			case LUCROS:
+				Bank.getBank().payFees(currentPlayer);
+				JOptionPane.showMessageDialog(null, "Você acaba de ganhaer R$200 de lucro!");
+				break;
+			case PASSE_LIVRE:
+				this.players[ this.currentPlayerID ].setJailPass( true );
+				JOptionPane.showMessageDialog(null, "Você ganhou um passe livre!");
+				break;
+			default:
+				break;			
+			}
+		}
 
 	}
 
