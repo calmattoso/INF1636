@@ -3,9 +3,12 @@
  */
 package com.monopoly.gui;
 
+import com.monopoly.game.Card;
+import com.monopoly.game.CompanyCard;
 import com.monopoly.game.Dice;
 import com.monopoly.game.Game;
 import com.monopoly.game.Player;
+import com.monopoly.game.TerrainCard;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -66,6 +69,28 @@ public class GUI
 		currentPlayerView = new CurrentPlayerView( 10 , 5 , 475, this.height - 215);
 		playersBalanceView = new PlayersBalanceView( this.width/2 + 470 , 10, 220, this.height/2 - 45 , numberOfPlayers );
 		
+	}
+	
+	public void showCardManager(Card c)
+	{
+		if(c instanceof CompanyCard)
+		{
+			/**
+			 * Open the management windows for company cards
+			 */
+			JFrame companyCardManager = new CompanyCardManager( (CompanyCard)(c) , height/6, width/6 );
+			companyCardManager.setVisible(true);
+			companyCardManager.setAlwaysOnTop(true);
+		}
+		else if(c instanceof TerrainCard)
+		{
+			/**
+			 * Open the management windows for company cards
+			 */
+			JFrame companyCardManager = new TerrainCardManager( (TerrainCard)(c) , height/6, width/6 );
+			companyCardManager.setVisible(true);
+			companyCardManager.setAlwaysOnTop(true);
+		}
 	}
 	
 	/**

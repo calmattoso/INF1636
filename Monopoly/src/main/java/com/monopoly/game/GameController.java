@@ -6,6 +6,10 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JFrame;
+
+import com.monopoly.gui.CompanyCardManager;
+import com.monopoly.gui.DataButton;
 import com.monopoly.gui.GUI;
 import com.monopoly.gui.GUIEvents;
 
@@ -86,14 +90,26 @@ public class GameController
 		 */
 		else if( message == GUI_BTN_COMPANY_CARD )
 		{	
-			System.out.println("Company card button clicked");
+			DataButton source = (DataButton) event.getSource();
+			int id = ((Board.CardInfo) source.getData()).getID();
+			String output = this.game.getCompanyCard(id).toString();
+			
+			this.window.showCardManager(this.game.getCompanyCard(id));	
+			
+			System.out.println("Company card button clicked\n" + output);
 		}
 		/**
 		 * The player has decided to view information about one of his/her terrain cards.
 		 */
 		else if( message == GUI_BTN_TERRAIN_CARD )
 		{	
-			System.out.println("Terrain card button clicked");
+			DataButton source = (DataButton) event.getSource();
+			int id = ((Board.CardInfo) source.getData()).getID();
+			String output = this.game.getTerrainCard(id).toString();
+			
+			this.window.showCardManager(this.game.getTerrainCard(id));	
+			
+			System.out.println("Terrain card button clicked\n" + output);
 		}
 	}
 

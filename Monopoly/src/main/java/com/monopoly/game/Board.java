@@ -118,7 +118,7 @@ public class Board {
 		private int id;
 		private String type;
 		
-		CardInfo( int id , String type )
+		public CardInfo( int id , String type )
 			throws IllegalArgumentException
 		{
 			if( id >= 0 )
@@ -151,6 +151,11 @@ public class Board {
 		public String getType()
 		{
 			return this.type;
+		}
+		
+		public String toString()
+		{
+			return "Card info: this.type - id: " + String.valueOf(this.id); 
 		}
 	}	
 	

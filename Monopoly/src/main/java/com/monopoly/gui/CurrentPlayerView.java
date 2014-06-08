@@ -37,6 +37,8 @@ import javax.swing.border.TitledBorder;
 
 
 
+
+import com.monopoly.game.Board;
 import com.monopoly.game.Card;
 import com.monopoly.game.CompanyCard;
 import com.monopoly.game.Game;
@@ -220,12 +222,15 @@ public class CurrentPlayerView
 		for(Card c: cards)
 		{
 			int id = c.getID();
+			
 			if(c instanceof CompanyCard)
 			{
+				Board.CardInfo cardInfo = new Board.CardInfo(id, "company");
 				ImageIcon cardImage = this.companyCards.get(id);
 				
 				this.companyCardsGrid[cc_i][cc_j].setIcon( cardImage );
 				this.companyCardsGrid[cc_i][cc_j].setEnabled( true );
+				((DataButton) this.companyCardsGrid[cc_i][cc_j]).setData(cardInfo);
 				
 				cc_j = (cc_j + 1) % COMPANY_CARDS_GRID_WIDTH;
 				if(cc_j == 0)
@@ -233,10 +238,12 @@ public class CurrentPlayerView
 			}
 			else if(c instanceof TerrainCard)
 			{
+				Board.CardInfo cardInfo = new Board.CardInfo(id, "terrain");
 				ImageIcon cardImage = this.terrainCards.get(id);
 				
 				this.terrainCardsGrid[tc_i][tc_j].setIcon( cardImage );
 				this.terrainCardsGrid[tc_i][tc_j].setEnabled( true );
+				((DataButton) this.terrainCardsGrid[tc_i][tc_j]).setData(cardInfo);
 				
 				tc_j = (tc_j + 1) % TERRAIN_CARDS_GRID_WIDTH;
 				if(tc_j == 0)
@@ -256,6 +263,7 @@ public class CurrentPlayerView
 			{
 				this.companyCardsGrid[i][j].setIcon(null);
 				this.companyCardsGrid[i][j].setEnabled(false);
+				((DataButton)(this.companyCardsGrid[i][j])).setData(null);
 			}
 		
 		/**
@@ -266,6 +274,7 @@ public class CurrentPlayerView
 			{
 				this.terrainCardsGrid[i][j].setIcon(null);
 				this.terrainCardsGrid[i][j].setEnabled(false);
+				((DataButton)(this.terrainCardsGrid[i][j])).setData(null);
 			}
 	}
 
@@ -281,7 +290,7 @@ public class CurrentPlayerView
 		{
 			for(int j = 0; j < COMPANY_CARDS_GRID_WIDTH; ++j)
 			{
-				JButton cardButton = new JButton();
+				DataButton cardButton = new DataButton();
 						
 				cardButton.setOpaque(false);
 				cardButton.setContentAreaFilled(false);
@@ -306,7 +315,8 @@ public class CurrentPlayerView
 		{
 			for(int j = 0; j < TERRAIN_CARDS_GRID_WIDTH; ++j)
 			{
-				JButton cardButton = new JButton();		
+				Board.CardInfo cardInfo = new Board.CardInfo(0, "terrain");
+				DataButton cardButton = new DataButton();		
 				
 				cardButton.setOpaque(false);
 				cardButton.setContentAreaFilled(false);
@@ -329,11 +339,14 @@ public class CurrentPlayerView
 	/**
 	 * Update current player information upon new player.
 	 */
-	public void update( Observable game, Object message ) {
-		if( game instanceof Game &&
+	public void update( Observable obj, Object message ) {
+		if( obj instanceof Game &&
 			message.equals( GAME_NEW_PLAYER ) )
 		{
-			this.player = ((Game) game).getCurrentPlayer();	
+			this.player.deleteObserver( this );
+			
+			this.player = ((Game) obj).getCurrentPlayer();	
+			this.player.addObserver( this );
 			
 			/**
 			 * Update the top level icon
@@ -348,11 +361,22 @@ public class CurrentPlayerView
 			
 			this.repaint();
 		}
+		else if( obj instanceof Player &&
+				 message.equals( GAME_PLAYER_CARDS_UPDATED ))
+		{
+			/**
+			 * Update both cards panel.
+			 */
+			refreshCardsGrids();
+			
+			this.repaint();
+		}
 	}
 
 	public void setCurrentPlayer( Player p )
 	{
 		this.player = p;
+		this.player.addObserver( this );
 		ImageIcon pin = this.pinsIcons.get( player.getPinColor() );
 		this.currentPlayer.setIcon( pin );
 	}

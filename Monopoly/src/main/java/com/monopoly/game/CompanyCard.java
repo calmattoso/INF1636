@@ -74,6 +74,12 @@ public class CompanyCard
 	public int getDue( int baseValue ) {
 		return ( this.multiplier * baseValue );
 	}
+	
+	@Override
+	public String getTitle()
+	{
+		return this.title;
+	}
 
 	/**
 	* Converts the information stored in a CompanyCard to a String

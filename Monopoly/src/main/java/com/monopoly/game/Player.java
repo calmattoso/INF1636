@@ -192,6 +192,9 @@ public class Player
 		}
 		
 		this.ownedCards.add( newCard );
+		
+		this.setChanged();
+		this.notifyObservers( GAME_PLAYER_CARDS_UPDATED );
 	}
 	
 	/**
@@ -210,6 +213,9 @@ public class Player
 		}
 		
 		this.ownedCards.remove( card );
+		
+		this.setChanged();
+		this.notifyObservers( GAME_PLAYER_CARDS_UPDATED );
 	}
 
 	/**

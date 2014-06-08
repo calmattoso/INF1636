@@ -66,7 +66,7 @@ public class DiceView
 		if( die1 == die2 && die1 == 0 )
 		{
 			g2d.setFont( new Font("Comic Sans", Font.BOLD, 16) );
-			g2d.drawString("☺ Bem Vindo! ☺", width/2 - width/6, height - 8);			
+			g2d.drawString("Bem Vindo! :)", width/2 - width/6, height - 8);			
 			return;
 		} 
 		
