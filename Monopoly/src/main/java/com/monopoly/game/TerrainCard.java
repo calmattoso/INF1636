@@ -66,15 +66,13 @@ public class TerrainCard
 	* Possible return conditions
 	*/
 
-	public static enum CondRet
+	public static enum TerrainCondRet
 	{
 		PROPERTY_LIMIT_REACHED,
 		PROPERTY_ADDED,
 		MISSING_REQUIREMENTS,
 		REMOVAL_FAILED,
 		PROPERTY_REMOVED,
-		MORTGAGE_REPAID,
-		TRADE_SUCCESSFULL
 	}
 
 	/**
@@ -242,7 +240,7 @@ public class TerrainCard
 	*					or if there were missing requirements
 	*/
 
-	public CondRet addProperty( PropertyType type )
+	public TerrainCondRet addProperty( PropertyType type )
 			throws IllegalArgumentException
 	{
 		switch( type )
@@ -265,7 +263,7 @@ public class TerrainCard
 	*					or if there were missing requirements
 	*/
 
-	private CondRet addHotel() {
+	private TerrainCondRet addHotel() {
 		int currentHotelQuantity = this.propertyQuantity.get( PropertyType.HOTEL ),
 			currentHouseQuantity = this.propertyQuantity.get( PropertyType.HOUSE ) ;	
 		
@@ -281,16 +279,16 @@ public class TerrainCard
 			{
 				this.propertyQuantity.put( PropertyType.HOTEL , currentHotelQuantity + 1 );
 				
-				return CondRet.PROPERTY_ADDED;
+				return TerrainCondRet.PROPERTY_ADDED;
 			}
 			else
 			{
-				return CondRet.MISSING_REQUIREMENTS;
+				return TerrainCondRet.MISSING_REQUIREMENTS;
 			}
 		}			
 		else
 		{
-			return CondRet.PROPERTY_LIMIT_REACHED;
+			return TerrainCondRet.PROPERTY_LIMIT_REACHED;
 		}
 	}
 
@@ -301,7 +299,7 @@ public class TerrainCard
 	*					or if there were missing requirements
 	*/
 
-	private CondRet addHouse()
+	private TerrainCondRet addHouse()
 	{
 		int currentHouseQuantity = this.propertyQuantity.get( PropertyType.HOUSE );
 		
@@ -312,11 +310,11 @@ public class TerrainCard
 		{
 			this.propertyQuantity.put( PropertyType.HOUSE , currentHouseQuantity + 1 );
 			
-			return CondRet.PROPERTY_ADDED;
+			return TerrainCondRet.PROPERTY_ADDED;
 		}
 		else 
 		{
-			return CondRet.PROPERTY_LIMIT_REACHED;
+			return TerrainCondRet.PROPERTY_LIMIT_REACHED;
 		}
 	}
 	
@@ -327,7 +325,7 @@ public class TerrainCard
 	 * @return		A return condition
 	 * @throws IllegalArgumentException
 	 */
-	public CondRet subProperty( PropertyType type )
+	public TerrainCondRet subProperty( PropertyType type )
 			throws IllegalArgumentException
 	{
 		switch( type )
@@ -347,17 +345,17 @@ public class TerrainCard
 	 * 
 	 * @return		A return condition
 	 */
-	private CondRet subHotel() {
+	private TerrainCondRet subHotel() {
 		int currentHotelQuantity = this.propertyQuantity.get( PropertyType.HOTEL );	
 		
 		if( currentHotelQuantity == 0 )
 		{
-			return CondRet.REMOVAL_FAILED;
+			return TerrainCondRet.REMOVAL_FAILED;
 		}			
 		else
 		{
 			this.propertyQuantity.put( PropertyType.HOTEL , currentHotelQuantity - 1 );
-			return CondRet.PROPERTY_REMOVED;
+			return TerrainCondRet.PROPERTY_REMOVED;
 		}
 	}
 	
@@ -366,7 +364,7 @@ public class TerrainCard
  	* 
  	* @return		A return condition
  	*/
-	private CondRet subHouse()
+	private TerrainCondRet subHouse()
 	{
 		int currentHouseQuantity = this.propertyQuantity.get( PropertyType.HOUSE ),
 			currentHotelQuantity = this.propertyQuantity.get( PropertyType.HOTEL );
@@ -374,12 +372,12 @@ public class TerrainCard
 
 		if( currentHotelQuantity > 0 || currentHouseQuantity == 0 )
 		{
-			return CondRet.REMOVAL_FAILED;
+			return TerrainCondRet.REMOVAL_FAILED;
 		}
 		else 
 		{	
 			this.propertyQuantity.put( PropertyType.HOUSE , currentHouseQuantity - 1 );
-			return CondRet.PROPERTY_REMOVED;
+			return TerrainCondRet.PROPERTY_REMOVED;
 		}
 	}
 	

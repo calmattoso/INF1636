@@ -1,7 +1,7 @@
 package com.monopoly.game;
 
 public class PropertyCard extends Card {
-	private int mortgageCount;
+	private boolean mortgaged;
 	protected int mortgage; 	// valor da hipoteca
 	
 	public PropertyCard(String title, int id){
@@ -24,23 +24,16 @@ public class PropertyCard extends Card {
 	 * 
 	 * @return 			The number of mortgages
 	 */
-	public int getMortgageCount(){
-		return this.mortgageCount;
+	public boolean isMortgaged(){
+		return this.mortgaged;
 	}
 	
 	/**
 	 * Adds one to the mortgage count
 	 */
 	
-	public void addMortgage(){
-		this.mortgageCount++;
+	public void setMortgage(boolean b){
+		this.mortgaged = b;
 	}
-	
-	/**
-	 * Subtracts one from the mortgage count
-	 */
-	public void subMortgage(){
-		this.mortgageCount--;
-	}
-	
+		
 }
