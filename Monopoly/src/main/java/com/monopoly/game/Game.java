@@ -503,11 +503,10 @@ public class Game
 	 *    current player.
 	 * 
 	 */
-	public void checkLandingPosition() {
+	public void checkLandingPosition( ) {
 		Player currentPlayer = this.players[ this.currentPlayerID ];
-		Board.CardInfo card = board.getCardAtPosition(
-			currentPlayer.getPosition() );
-		
+		Board.CardInfo card = board.getCardAtPosition( currentPlayer.getPosition() );
+		int diceSum = dice.getSum();
 		
 		System.out.println("Current card: " + card.getType() );
 		/**
@@ -517,11 +516,13 @@ public class Game
 		{
 			int id = cardPicker.nextInt(this.chanceCardsDeck.size());
 			ChanceCard chanceCard = this.chanceCardsDeck.get(id);
+			System.out.println( chanceCard );
+			
 			String output = 
 				"O jogador atual obteve:\n" + 
 				chanceCard.getTitle() + "\n" +
 				chanceCard.getDescription() + "\n";
-			System.out.println( output );
+			
 			
 			if( chanceCard.getAmount() != 0 )
 				output += "Valor: " + Math.abs( chanceCard.getAmount()) + "\n"; 
@@ -561,7 +562,7 @@ public class Game
 				break;			
 			}		
 		}
-		else if( card.getType().equals("company" ))
+		else if( card.getType().equals("company"))
 		{
 			System.out.println( this.companyCardsDeck.get( card.getID() ));
 			CompanyCard companyCard = this.companyCardsDeck.get( card.getID() );
@@ -586,13 +587,28 @@ public class Game
 					currentPlayer.addCard( (Card) companyCard );
 					
 					companyCard.setHasOwner(true);
+					companyCard.setOwner( players[currentPlayerID] );
+					
+					
 					
 					JOptionPane.showMessageDialog(null,
 						"Você acaba de adquirir: \"" +
-						companyCard.getTitle() + "\"!\n" +
-						"Novo saldo: " + currentPlayer.getMoney()
+						companyCard.getTitle() + "\"!\n"
 					);
 				}
+			}
+			/**
+			 * Pay what's due to the owner.
+			 */
+			else
+			{
+				Player owner = companyCard.getOwner();
+			
+				owner.updateMoney( companyCard.getDue( diceSum ));
+				currentPlayer.updateMoney( -companyCard.getDue( diceSum ));
+				
+				JOptionPane.showMessageDialog(null, "Jogador " + currentPlayer.getPinColor().toString() + 
+						" pagou R$" + companyCard.getDue(diceSum) + " ao jogador " + owner.getPinColor().toString());
 			}
 		}
 		else if( card.getType().equals("terrain"))
@@ -620,6 +636,7 @@ public class Game
 					currentPlayer.addCard( (Card) terrainCard );
 					
 					terrainCard.setHasOwner(true);
+					terrainCard.setOwner( currentPlayer );
 					
 					JOptionPane.showMessageDialog(null,
 						"Você acaba de adquirir: \"" +
@@ -627,6 +644,16 @@ public class Game
 						"Novo saldo: " + currentPlayer.getMoney()
 					);
 				}
+			}
+			else
+			{
+				Player owner = terrainCard.getOwner();
+				
+				owner.updateMoney( terrainCard.getRent( ));
+				currentPlayer.updateMoney( -terrainCard.getRent( ));
+				
+				JOptionPane.showMessageDialog(null, "Jogador " + currentPlayer.getPinColor().toString() + 
+						" pagou R$" + terrainCard.getRent() + " ao jogador " + owner.getPinColor().toString());
 			}
 		}
 
