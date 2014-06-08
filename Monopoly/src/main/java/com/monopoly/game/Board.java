@@ -24,7 +24,7 @@ public class Board {
 		COMPANHIA_FERROVIARIA, AV_BRIGADEIRO_FARIA_LIMA, COMPANHIA_DE_VIACAO,
 		AV_REBOUCAS, AV_9_DE_JULHO, PRISAO, AV_EUROPA, SORTE2, RUA_AUGUSTA,
 		AV_PACAEMBU, COMPANHIA_DE_TAXI, SORTE3, INTERLAGOS, LUCROS, MORUMBI,
-		LIVRE, FLAMENGO, SORTE4, BOTAFOGO, IMPOSTO, COMPANHIA_DE_NAVEGACAO,
+		PASSE_LIVRE, FLAMENGO, SORTE4, BOTAFOGO, IMPOSTO, COMPANHIA_DE_NAVEGACAO,
 		AV_BRASIL, SORTE5, AV_PAULISTA,	JARDIM_EUROPA, VA_PARA_A_PRISAO,
 		COPACABANA,	COMPANHIA_DE_AVIACAO, AV_VIEIRA_SOUTO, AV_ATLANTICA,
 		COMPANHIA_DE_TAXI_AEREO, IPANEMA, SORTE6, JARDIM_PAULISTA, BROOKLIN;
@@ -57,7 +57,7 @@ public class Board {
 			fromString.put( "INTERLAGOS"               ,  INTERLAGOS                );               
 			fromString.put( "LUCROS"                   ,  LUCROS                    );               
 			fromString.put( "MORUMBI"                  ,  MORUMBI                   );               
-			fromString.put( "LIVRE"                    ,  LIVRE                     );               
+			fromString.put( "LIVRE"                    ,  PASSE_LIVRE               );               
 			fromString.put( "FLAMENGO"                 ,  FLAMENGO                  );               
 			fromString.put( "SORTE4"                   ,  SORTE4                    );               
 			fromString.put( "BOTAFOGO"                 ,  BOTAFOGO                  );               

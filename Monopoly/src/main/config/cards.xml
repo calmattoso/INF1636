@@ -76,7 +76,7 @@
       <description>Você apostou com os parceiros deste jogo e ganhou.</description>
       <id>11</id>
       <title>SORTE</title>
-      <sideEffect>NONE_COMPETITORS</sideEffect>
+      <sideEffect>CHARGE_COMPETITORS</sideEffect>
     </card>
     <card>
       <amount>45</amount>
