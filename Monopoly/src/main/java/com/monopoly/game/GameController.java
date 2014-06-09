@@ -73,6 +73,13 @@ public class GameController
 			this.game.evaluateMovement();
 			
 			this.game.checkPreviousAlive();
+			
+			Player winner = this.game.getWinner(); 
+			if( winner != null )
+			{
+				window.showVictory( winner );
+				window.close();
+			}
 		}
 		/**
 		 * If someone has clicked on the jail pass button, get the current player out of jail.

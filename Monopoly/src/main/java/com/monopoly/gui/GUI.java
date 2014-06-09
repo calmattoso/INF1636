@@ -17,11 +17,13 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 
 public class GUI 
 	implements GUIEvents
@@ -261,6 +263,16 @@ public class GUI
 		this.addComponent( currentPlayerView , 4 , 1 );
 		
 		this.addComponent( playersBalanceView, 5, 1);
+	}
+
+	public void showVictory(Player winner) {
+		JOptionPane.showMessageDialog(null, winner.getPinColor() + " venceu!");
+	}
+
+	public void close() {
+		 WindowEvent event = new WindowEvent(viewPort, WindowEvent.WINDOW_CLOSING);
+	        
+	     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(event);	
 	}
 	
 }

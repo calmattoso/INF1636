@@ -725,7 +725,7 @@ public class Game
 	* Ends the current player's turn, setting a new current player
 	*/
 	private void nextPlayer() {
-		int i = currentPlayerID + 1, 
+		int i = (( currentPlayerID + 1 ) % players.length), 
 			original = currentPlayerID;
 		
 		while( i != original )
@@ -735,7 +735,7 @@ public class Game
 				break;
 			}
 			
-			i = (i + 1) % players.length;
+			i = ((i + 1) % players.length);
 		} 
 		
 		currentPlayerID = i;
@@ -832,9 +832,17 @@ public class Game
 	 */
 	public void checkPreviousAlive()
 	{
-		int playerID = ( ( currentPlayerID == 0 ) ? 
-			players.length - 1 : currentPlayerID - 1 
-		);
+		int playerID = ((currentPlayerID - 1) == -1 ? players.length - 1 : (currentPlayerID - 1));
+		while( playerID != currentPlayerID )
+		{
+			if( players[ playerID ].isAlive() == true )
+			{
+				break;
+			}
+			
+			playerID = ((currentPlayerID - 1) == -1 ? players.length - 1 : (currentPlayerID - 1));
+		}
+		
 		Player player = players[ playerID ];
 		ArrayList<Card> cards = player.getOwnedCards();
 		boolean alive = true;
@@ -885,5 +893,24 @@ public class Game
 		}
 		
 		return true;
+	}
+
+	
+	/**
+	 * Return the last man standing.
+	 * 
+	 * @return
+	 */
+	public Player getWinner() {
+		Player winner = null;
+		
+		for(Player p : players){
+			if( p.isAlive() == true && winner == null)
+				winner = p;
+			else if( p.isAlive() == true && winner != null )
+				return null;
+		}		
+		
+		return winner;
 	}
 }
