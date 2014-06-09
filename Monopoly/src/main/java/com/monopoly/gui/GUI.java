@@ -266,7 +266,7 @@ public class GUI
 	}
 
 	public void showVictory(Player winner) {
-		JOptionPane.showMessageDialog(null, winner.getPinColor() + " venceu!");
+		JOptionPane.showMessageDialog(null, winner.getPinColor() + " venceu!!! :D");
 	}
 
 	public void close() {

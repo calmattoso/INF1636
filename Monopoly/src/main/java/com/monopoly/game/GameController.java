@@ -72,7 +72,7 @@ public class GameController
 			
 			this.game.evaluateMovement();
 			
-			this.game.checkPreviousAlive();
+			this.game.killNotAlive();
 			
 			Player winner = this.game.getWinner(); 
 			if( winner != null )

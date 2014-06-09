@@ -413,6 +413,14 @@ public class Game
 		//   ele é enviado para a prisão.
 		previousPlayerJailStatus();
 		
+		// Ignore current player if he/she has no more money. 
+		// By changing to next 
+		if( currentPlayer.getMoney() <= 0 )
+		{	
+			nextPlayer();
+		}
+		
+		
 		// Calcula imediatamente a potencial próxima posição
 		nextPosition = position.getNext( dice.getSum() );
 		boolean roundTrip = position.roundTrip( dice.getSum());
@@ -730,10 +738,24 @@ public class Game
 		
 		while( i != original )
 		{
-			if( players[i].isAlive() == true )
-			{
-				break;
+			ArrayList<Card> cards = players[i].getOwnedCards();
+			boolean alive = true;
+			
+			if( players[i].getMoney() <= 0 )
+			{	
+				alive = false;
+				for(Card c: cards)
+				{
+					if( ((PropertyCard)(c)).isMortgaged() == false )
+					{
+						alive = true;
+						break;
+					}
+				}
 			}
+			
+			if( alive == true )
+				break;
 			
 			i = ((i + 1) % players.length);
 		} 
@@ -817,53 +839,41 @@ public class Game
 		players[ playerID ].setInJail( true );
 	}
 
-	public boolean anyoneAlive(Player[] players){
-		for(Player p : players){
-			if(p.isAlive()==true)
-				return true;
-		}
-		return false;
-	}
-	
 	/**
-	 * Check if the player of the previous round is alive.
+	 * Kill all players who have no available actions.
 	 * 
 	 * @return
 	 */
-	public void checkPreviousAlive()
+	public void killNotAlive()
 	{
-		int playerID = ((currentPlayerID - 1) == -1 ? players.length - 1 : (currentPlayerID - 1));
-		while( playerID != currentPlayerID )
-		{
-			if( players[ playerID ].isAlive() == true )
-			{
-				break;
-			}
+		int i = (( currentPlayerID + 1 ) % players.length), 
+			original = currentPlayerID;
 			
-			playerID = ((currentPlayerID - 1) == -1 ? players.length - 1 : (currentPlayerID - 1));
-		}
-		
-		Player player = players[ playerID ];
-		ArrayList<Card> cards = player.getOwnedCards();
-		boolean alive = true;
-		
-		if( player.getMoney() < 0 )
-		{	
-			alive = false;
-			for(Card c: cards)
-			{
-				if( ((PropertyCard)(c)).isMortgaged() == false )
-				{
-					alive = true;
-					break;
-				}
-			}
-		}
-
-		if( alive == false )
+		while( i != original )
 		{
-			player.kill();
-		}
+			ArrayList<Card> cards = players[i].getOwnedCards();
+			boolean alive = true;
+				
+			if( players[i].getMoney() <= 0 )
+			{	
+				alive = false;
+				for(Card c: cards)
+				{
+					if( ((PropertyCard)(c)).isMortgaged() == false )
+					{
+						alive = true;
+						break;
+					}
+				}
+				
+				if( alive == false )
+				{
+					players[i].kill();
+				}
+			}			
+				
+			i = ((i + 1) % players.length);
+		} 
 	}
 	
 	/**
