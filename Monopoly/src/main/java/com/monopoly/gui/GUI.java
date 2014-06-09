@@ -7,6 +7,7 @@ import com.monopoly.game.Card;
 import com.monopoly.game.CompanyCard;
 import com.monopoly.game.Dice;
 import com.monopoly.game.Game;
+import com.monopoly.game.GameController;
 import com.monopoly.game.Player;
 import com.monopoly.game.TerrainCard;
 
@@ -71,7 +72,7 @@ public class GUI
 		
 	}
 	
-	public void showCardManager(Card c)
+	public void showCardManager(Card c, GameController gameController)
 	{
 		if(c instanceof CompanyCard)
 		{
@@ -80,16 +81,14 @@ public class GUI
 			 */
 			JFrame companyCardManager = new CompanyCardManager( (CompanyCard)(c) , height/6, width/6 );
 			companyCardManager.setVisible(true);
-			companyCardManager.setAlwaysOnTop(true);
 		}
 		else if(c instanceof TerrainCard)
 		{
 			/**
 			 * Open the management windows for company cards
 			 */
-			JFrame companyCardManager = new TerrainCardManager( (TerrainCard)(c) , height/6, width/6 );
-			companyCardManager.setVisible(true);
-			companyCardManager.setAlwaysOnTop(true);
+			JFrame terrainCardManager = new TerrainCardManager( (TerrainCard)(c) , height/6, width/6 , gameController );
+			terrainCardManager.setVisible(true);
 		}
 	}
 	

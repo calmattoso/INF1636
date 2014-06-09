@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.monopoly.game.Player;
+import com.monopoly.game.TerrainCard.PropertyType;
 
 /**
 * This class controls the game , including players, movments, jail time, etc
@@ -810,11 +811,32 @@ public class Game
 		return false;
 	}
 	
-	public boolean ownsAllColor(Player p, TerrainCard.Color color){
-		for(int i=0;i<terrainCardsDeck.size();i++){
-			if(terrainCardsDeck.get(i).getColor() == color && terrainCardsDeck.get(i).getOwner() != p)
+	/**
+	 * Check if a given property type can be built on the terrain card c
+	 * 
+	 * @param owner Owner of the card
+	 * @param c Terrain card
+	 * @param type Type of property to be built
+	 * @return Whether it's possible to build the property
+	 */
+	public boolean canBuildOnTerrain(Player owner, TerrainCard c, PropertyType type) {
+		
+		if( c.getPropertyQuantity(type) == c.getPropertyCapacity(type) ||
+			type == TerrainCard.PropertyType.HOTEL &&
+			c.getPropertyQuantity(TerrainCard.PropertyType.HOUSE) != c.getPropertyCapacity(TerrainCard.PropertyType.HOUSE)			 
+		) {
+			return false;
+		}		
+		
+		for(int i = 0; i < terrainCardsDeck.size(); i++)
+		{
+			if( terrainCardsDeck.get(i).getColor() == c.getColor() &&
+				terrainCardsDeck.get(i).getOwner() != owner)
+			{
 				return false;
+			}
 		}
+		
 		return true;
 	}
 }

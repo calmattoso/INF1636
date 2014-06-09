@@ -6,9 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JFrame;
-
-import com.monopoly.gui.CompanyCardManager;
+import com.monopoly.game.TerrainCard.PropertyType;
 import com.monopoly.gui.DataButton;
 import com.monopoly.gui.GUI;
 import com.monopoly.gui.GUIEvents;
@@ -94,7 +92,7 @@ public class GameController
 			int id = ((Board.CardInfo) source.getData()).getID();
 			String output = this.game.getCompanyCard(id).toString();
 			
-			this.window.showCardManager(this.game.getCompanyCard(id));	
+			this.window.showCardManager(this.game.getCompanyCard(id), null);	
 			
 			System.out.println("Company card button clicked\n" + output);
 		}
@@ -107,10 +105,14 @@ public class GameController
 			int id = ((Board.CardInfo) source.getData()).getID();
 			String output = this.game.getTerrainCard(id).toString();
 			
-			this.window.showCardManager(this.game.getTerrainCard(id));	
+			this.window.showCardManager(this.game.getTerrainCard(id), this);	
 			
 			System.out.println("Terrain card button clicked\n" + output);
 		}
+	}
+
+	public boolean checkBuild(Player owner, TerrainCard c, PropertyType type) {
+		return this.game.canBuildOnTerrain(owner, c, type);		
 	}
 
 	

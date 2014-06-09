@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 
 import com.monopoly.game.Bank;
 import com.monopoly.game.CompanyCard;
+import com.monopoly.game.GameController;
 import com.monopoly.game.TerrainCard;
 
 public class TerrainCardManager extends JFrame {
@@ -29,11 +30,11 @@ public class TerrainCardManager extends JFrame {
 	
 	private JPanel menu;
 
-	public TerrainCardManager(TerrainCard c, int x, int y)
+	public TerrainCardManager(TerrainCard c, int x, int y, GameController gameController )
 	{
 		this.card = c;
 		
-		menu = new NegotiationPanel(card, this);
+		menu = new NegotiationPanel(card, this, gameController);
 		menu.setLayout(null);
 		menu.setBounds(0,0,WIDTH,HEIGHT);
 		
@@ -79,11 +80,14 @@ public class TerrainCardManager extends JFrame {
 		private ImageIcon houseImage;
 		private ImageIcon hotelImage;
 		
+		private GameController controller;
 		
-		public NegotiationPanel(TerrainCard card2, TerrainCardManager terrainCardManager)
+		
+		public NegotiationPanel(TerrainCard card2, TerrainCardManager terrainCardManager, GameController gameController)
 		{
 			this.card = card2; 
 			this.parent = terrainCardManager;
+			this.controller = gameController;
 			
 			this.cardImage = new ImageIcon("src/main/resources/cards/terrain/" + String.valueOf(card2.getID()) + ".png");
 			this.mortgageImage = new ImageIcon("src/main/resources/mortgage.png");
@@ -142,13 +146,22 @@ public class TerrainCardManager extends JFrame {
 			paybackMortgage.setActionCommand( PAYBACK_MORTGAGE_EVENT );
 			add(paybackMortgage);
 			
-			CustomButton buildHouse = new CustomButton( "Construir Casa" , houseImage, 200, 110 );
+			TerrainCard.PropertyType houseType = TerrainCard.PropertyType.HOUSE,
+									 hotelType = TerrainCard.PropertyType.HOTEL ;
+			
+			CustomButton buildHouse = new CustomButton( 
+				"Construir Casa (" + card.getPropertyQuantity(houseType) + "/" + card.getPropertyCapacity(houseType) + ")",
+				houseImage, 200, 110
+			);
 			buildHouse.setBounds( 265 , 200 , 190 , 40 );
 			buildHouse.addActionListener(this);
 			buildHouse.setActionCommand( BUILD_HOUSE_EVENT );
 			add(buildHouse);
 			
-			CustomButton buildHotel = new CustomButton( "Construir Hotel" , hotelImage, 200, 110 );
+			CustomButton buildHotel = new CustomButton( 
+				"Construir Casa (" + card.getPropertyQuantity(hotelType) + "/" + card.getPropertyCapacity(hotelType) + ")",
+				hotelImage, 200, 110
+			);
 			buildHotel.setBounds( 265 , 250 , 190 , 40 );
 			buildHotel.addActionListener(this);
 			buildHotel.setActionCommand( BUILD_HOTEL_EVENT );
@@ -165,7 +178,6 @@ public class TerrainCardManager extends JFrame {
 			{
 				paybackMortgage.setEnabled(false);
 			}
-
 		}
 
 		/**
@@ -175,26 +187,72 @@ public class TerrainCardManager extends JFrame {
 			String message = event.getActionCommand();
 			
 			if( message.equals( SELL_EVENT ))
-			{				
+			{		
+				Bank.CondRet ret = Bank.getBank().sellToBank( card.getOwner() , card );
+				
+				if( ret == Bank.CondRet.MISSING_REQUIREMENTS )
+				{
+					JOptionPane.showMessageDialog(null, "Ação inválida!");
+				}				
+				
 				System.out.println("sellCard");
 			}
 			else if( message.equals( MORTGAGE_EVENT ))
 			{
+				Bank.CondRet ret = Bank.getBank().mortgage( card );
+				
+				if( ret == Bank.CondRet.CANNOT_MORTGAGE )
+				{
+					JOptionPane.showMessageDialog(null, "Ação inválida!");
+				}					
 				
 				System.out.println("mortgageCard");
 			}
 			else if( message.equals( PAYBACK_MORTGAGE_EVENT ))
-			{		
+			{	
+				Bank.CondRet ret = Bank.getBank().payMortgageBack( card );
+				
+				if( ret == Bank.CondRet.MISSING_REQUIREMENTS )
+				{
+					JOptionPane.showMessageDialog(null, "Ação inválida!");
+				}
 				
 				System.out.println("payback");
 			}
 			else if( message.equals( BUILD_HOUSE_EVENT ))
 			{		
+				TerrainCard.PropertyType type = TerrainCard.PropertyType.HOUSE;
+				
+				
+				if( controller.checkBuild( card.getOwner() , card, type ) == false )
+				{
+					JOptionPane.showMessageDialog(null, "Ação inválida!");
+				}	
+				
+				TerrainCard.TerrainCondRet ret = this.card.addProperty( type );	
+				
+				if( ret != TerrainCard.TerrainCondRet.PROPERTY_ADDED )
+				{
+					JOptionPane.showMessageDialog(null, "Ação inválida!");
+				}
 				
 				System.out.println("buildHouse");
 			}
 			else if( message.equals( BUILD_HOTEL_EVENT ))
 			{		
+				TerrainCard.PropertyType type = TerrainCard.PropertyType.HOTEL;
+				
+				if( controller.checkBuild( card.getOwner() , card, type ) == false )
+				{
+					JOptionPane.showMessageDialog(null, "Ação inválida!");
+				}	
+				
+				TerrainCard.TerrainCondRet ret = this.card.addProperty( type );				
+				
+				if( ret != TerrainCard.TerrainCondRet.PROPERTY_ADDED )
+				{
+					JOptionPane.showMessageDialog(null, "Ação inválida!");
+				}
 				
 				System.out.println("buildHotel");
 			}

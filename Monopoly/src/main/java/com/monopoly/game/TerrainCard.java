@@ -243,6 +243,12 @@ public class TerrainCard
 	public TerrainCondRet addProperty( PropertyType type )
 			throws IllegalArgumentException
 	{
+		if( this.owner == null ||
+			this.owner.getMoney() < this.propertyCost )
+		{
+			return TerrainCondRet.MISSING_REQUIREMENTS;
+		}
+		
 		switch( type )
 		{
 		case HOUSE:
@@ -257,7 +263,7 @@ public class TerrainCard
 	}
 	
 	/**
-	* Tries to build a Hotel in that terrain
+	* Tries to build a Hotel in that terrain. It charges the owner.
 	*
 	*@return 			A condition indicating if the hotel was successfully added, if the terrain is full,
 	*					or if there were missing requirements
@@ -265,7 +271,7 @@ public class TerrainCard
 
 	private TerrainCondRet addHotel() {
 		int currentHotelQuantity = this.propertyQuantity.get( PropertyType.HOTEL ),
-			currentHouseQuantity = this.propertyQuantity.get( PropertyType.HOUSE ) ;	
+			currentHouseQuantity = this.propertyQuantity.get( PropertyType.HOUSE ) ;
 		
 		/**
 		 * A hotel can only be added if there's still an empty slot for it.
@@ -278,6 +284,7 @@ public class TerrainCard
 			if( currentHouseQuantity == this.propertyCapacity.get( PropertyType.HOUSE ))
 			{
 				this.propertyQuantity.put( PropertyType.HOTEL , currentHotelQuantity + 1 );
+				this.owner.updateMoney( propertyCost );
 				
 				return TerrainCondRet.PROPERTY_ADDED;
 			}
@@ -309,6 +316,7 @@ public class TerrainCard
 		if( currentHouseQuantity < this.propertyCapacity.get( PropertyType.HOUSE ) )
 		{
 			this.propertyQuantity.put( PropertyType.HOUSE , currentHouseQuantity + 1 );
+			this.owner.updateMoney( propertyCost );
 			
 			return TerrainCondRet.PROPERTY_ADDED;
 		}
