@@ -45,6 +45,7 @@ public class GUI
 	// Botão para lançar os dados
 	private JButton rollDice;
 	private JButton useJailPass;
+	private JButton trade;
 
 	// Jail pass button controller, checks all rules, et al.
 	private JailPassController useJailPassController;
@@ -74,6 +75,12 @@ public class GUI
 		
 	}
 	
+	/**
+	 * Open a popup to manage a given card. 
+	 * 
+	 * @param c Card to be managed
+	 * @param gameController Pipe for useful functions
+	 */
 	public void showCardManager(Card c, GameController gameController)
 	{
 		if(c instanceof CompanyCard)
@@ -94,6 +101,11 @@ public class GUI
 		}
 	}
 	
+	public void showTradeManager(Player currentPlayer, Player[] players) {
+		JFrame tradeManager = new TradeManager( currentPlayer , players );
+		tradeManager.setVisible(true);		
+	}
+	
 	/**
 	 * Configures the UI buttons.
 	 * 
@@ -106,7 +118,7 @@ public class GUI
 		 * Set up Roll dice controls
 		 */
 		ImageIcon rollDiceIcon = new ImageIcon("src/main/resources/dice.png");
-		rollDice = new CustomButton( "Roll Dice", rollDiceIcon , this.width/2 - 155 , 25 );		
+		rollDice = new CustomButton( "Jogar", rollDiceIcon , this.width/2 - 155 , 25 );		
 		rollDice.setActionCommand( GUI_BTN_DICE_ROLLED );
 		rollDice.addActionListener( actionListener );
 		
@@ -114,8 +126,14 @@ public class GUI
 		 * Set up Jail pass controls
 		 */
 		ImageIcon jailPassIcon = new ImageIcon("src/main/resources/unlock.png");
-		useJailPass = new CustomButton( "Use Jail Pass", jailPassIcon);		
+		useJailPass = new CustomButton( "Passe Livre", jailPassIcon);		
 		useJailPass.setActionCommand( GUI_BTN_JAIL_PASS );
+		
+		trade = new CustomButton( "Trocar" , null  );
+		trade.setBounds( this.width/2 - 70, this.height - 120 , 330 , 50 );
+		trade.setVisible(true);
+		trade.addActionListener( actionListener );
+		trade.setActionCommand( GUI_BTN_TRADE );
 		
 		this.useJailPassController = new JailPassController( useJailPass );
 		useJailPass.addActionListener( useJailPassController );
@@ -255,6 +273,7 @@ public class GUI
 		// Adiciona os botões
 		this.addComponent( rollDice    , 2 , 1 );
 		this.addComponent( useJailPass , 2 , 2 );
+		this.addComponent( trade       , 6 , 3 );
 		
 		// Adiciona a view dos dados
 		this.addComponent( diceView , 3 , 1 );
@@ -274,5 +293,7 @@ public class GUI
 	        
 	     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(event);	
 	}
+
+	
 	
 }

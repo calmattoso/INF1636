@@ -118,6 +118,12 @@ public class GameController
 			
 			System.out.println("Terrain card button clicked\n" + output);
 		}
+		else if( message == GUI_BTN_TRADE )
+		{
+			this.window.showTradeManager( this.game.getCurrentPlayer() , this.game.getPlayers() );	
+			
+			System.out.println("Terrain card button clicked\n");
+		}
 	}
 
 	public boolean checkBuild(Player owner, TerrainCard c, PropertyType type) {
