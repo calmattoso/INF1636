@@ -159,7 +159,7 @@ public class TerrainCardManager extends JFrame {
 			add(buildHouse);
 			
 			CustomButton buildHotel = new CustomButton( 
-				"Construir Casa (" + card.getPropertyQuantity(hotelType) + "/" + card.getPropertyCapacity(hotelType) + ")",
+				"Construir Hotel (" + card.getPropertyQuantity(hotelType) + "/" + card.getPropertyCapacity(hotelType) + ")",
 				hotelImage, 200, 110
 			);
 			buildHotel.setBounds( 265 , 250 , 190 , 40 );
@@ -228,12 +228,13 @@ public class TerrainCardManager extends JFrame {
 				{
 					JOptionPane.showMessageDialog(null, "Ação inválida!");
 				}	
-				
-				TerrainCard.TerrainCondRet ret = this.card.addProperty( type );	
-				
-				if( ret != TerrainCard.TerrainCondRet.PROPERTY_ADDED )
-				{
-					JOptionPane.showMessageDialog(null, "Ação inválida!");
+				else {
+					TerrainCard.TerrainCondRet ret = this.card.addProperty( type );	
+					
+					if( ret != TerrainCard.TerrainCondRet.PROPERTY_ADDED )
+					{
+						JOptionPane.showMessageDialog(null, "Ação inválida!");
+					}
 				}
 				
 				System.out.println("buildHouse");
@@ -246,12 +247,13 @@ public class TerrainCardManager extends JFrame {
 				{
 					JOptionPane.showMessageDialog(null, "Ação inválida!");
 				}	
-				
-				TerrainCard.TerrainCondRet ret = this.card.addProperty( type );				
-				
-				if( ret != TerrainCard.TerrainCondRet.PROPERTY_ADDED )
-				{
-					JOptionPane.showMessageDialog(null, "Ação inválida!");
+				else {
+					TerrainCard.TerrainCondRet ret = this.card.addProperty( type );				
+					
+					if( ret != TerrainCard.TerrainCondRet.PROPERTY_ADDED )
+					{
+						JOptionPane.showMessageDialog(null, "Ação inválida!");
+					}
 				}
 				
 				System.out.println("buildHotel");

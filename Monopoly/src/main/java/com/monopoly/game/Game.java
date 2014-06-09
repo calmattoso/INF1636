@@ -828,7 +828,7 @@ public class Game
 			return false;
 		}		
 		
-		for(int i = 0; i < terrainCardsDeck.size(); i++)
+		for(int i = 1; i <= terrainCardsDeck.size(); i++)
 		{
 			if( terrainCardsDeck.get(i).getColor() == c.getColor() &&
 				terrainCardsDeck.get(i).getOwner() != owner)
