@@ -846,10 +846,10 @@ public class Game
 	 */
 	public void killNotAlive()
 	{
-		int i = (( currentPlayerID + 1 ) % players.length), 
+		int i = currentPlayerID, 
 			original = currentPlayerID;
 			
-		while( i != original )
+		do
 		{
 			ArrayList<Card> cards = players[i].getOwnedCards();
 			boolean alive = true;
@@ -873,7 +873,7 @@ public class Game
 			}			
 				
 			i = ((i + 1) % players.length);
-		} 
+		} while( i != original );
 	}
 	
 	/**
