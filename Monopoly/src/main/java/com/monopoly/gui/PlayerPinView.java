@@ -12,16 +12,18 @@ import java.util.Observable;
 import java.util.Observer;
 
 import com.monopoly.game.Board;
+import com.monopoly.game.GameEvents;
 import com.monopoly.game.Player;
 
 public class PlayerPinView 
 	extends JPanel 
-	implements Observer 
+	implements Observer, GameEvents 
 {
 	private static final long serialVersionUID = 2386349901642426601L;
 	private Point coordinates , offset , jitterOffset ;
 	private ImageIcon pin;
 	private Dimension pinDimension;
+	boolean dead = false;
 	
 	public PlayerPinView( final Player p , Point offset )
 	{
@@ -49,6 +51,9 @@ public class PlayerPinView
 	
 	public void paint(Graphics g)
 	{
+		if( dead == true )
+			return;
+		
 		Graphics2D graphics2D = (Graphics2D) g;
 		graphics2D.drawImage( pin.getImage() , 0 , 0 , null );
 	}
@@ -68,6 +73,14 @@ public class PlayerPinView
 			
 			updateBounds();
 			repaint();
+		}
+		else if( playerModel instanceof Player &&
+				 update.equals( GAME_PLAYER_DIED ) )
+		{			
+			this.dead = true;
+			playerModel.deleteObserver( this );
+				
+			this.repaint();
 		}
 	}
 	

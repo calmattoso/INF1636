@@ -1,6 +1,7 @@
 package com.monopoly.game;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Random;
@@ -724,7 +725,20 @@ public class Game
 	* Ends the current player's turn, setting a new current player
 	*/
 	private void nextPlayer() {
-		currentPlayerID = (currentPlayerID + 1) % players.length;
+		int i = currentPlayerID + 1, 
+			original = currentPlayerID;
+		
+		while( i != original )
+		{
+			if( players[i].isAlive() == true )
+			{
+				break;
+			}
+			
+			i = (i + 1) % players.length;
+		} 
+		
+		currentPlayerID = i;
 		
 		this.setChanged();
 		this.notifyObservers( GAME_NEW_PLAYER );		
@@ -809,6 +823,39 @@ public class Game
 				return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Check if the player of the previous round is alive.
+	 * 
+	 * @return
+	 */
+	public void checkPreviousAlive()
+	{
+		int playerID = ( ( currentPlayerID == 0 ) ? 
+			players.length - 1 : currentPlayerID - 1 
+		);
+		Player player = players[ playerID ];
+		ArrayList<Card> cards = player.getOwnedCards();
+		boolean alive = true;
+		
+		if( player.getMoney() < 0 )
+		{	
+			alive = false;
+			for(Card c: cards)
+			{
+				if( ((PropertyCard)(c)).isMortgaged() == false )
+				{
+					alive = true;
+					break;
+				}
+			}
+		}
+
+		if( alive == false )
+		{
+			player.kill();
+		}
 	}
 	
 	/**

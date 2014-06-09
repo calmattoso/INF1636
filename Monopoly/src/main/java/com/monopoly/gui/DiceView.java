@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.RenderingHints;
-import java.io.UnsupportedEncodingException;
 import java.util.Observable;
 import java.util.Observer;
 

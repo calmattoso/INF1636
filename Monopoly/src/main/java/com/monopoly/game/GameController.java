@@ -71,6 +71,8 @@ public class GameController
 			System.out.println("Dice rolled");
 			
 			this.game.evaluateMovement();
+			
+			this.game.checkPreviousAlive();
 		}
 		/**
 		 * If someone has clicked on the jail pass button, get the current player out of jail.

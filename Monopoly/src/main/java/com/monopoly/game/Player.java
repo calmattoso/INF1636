@@ -191,6 +191,8 @@ public class Player
 			throw new IllegalArgumentException("Player already has this card!");
 		}
 		
+		newCard.setOwner( this );
+		newCard.setHasOwner( true );
 		this.ownedCards.add( newCard );
 		
 		this.setChanged();
@@ -212,6 +214,8 @@ public class Player
 			throw new IllegalArgumentException("Card not owned by this player!");
 		}
 		
+		card.setOwner( null );
+		card.setHasOwner( false );
 		this.ownedCards.remove( card );
 		
 		this.setChanged();
@@ -265,6 +269,18 @@ public class Player
 		}
 		
 		return true;
+	}
+	
+	public void kill()
+	{
+		for(Card c: this.ownedCards)
+		{
+			this.removeCard(c);
+		}
+		this.money = 0;
+		
+		this.setChanged();				
+		this.notifyObservers( GAME_PLAYER_DIED );
 	}
 	
 	public String toString()

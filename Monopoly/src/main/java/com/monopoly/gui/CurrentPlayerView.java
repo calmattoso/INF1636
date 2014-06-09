@@ -23,21 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import com.monopoly.game.Board;
 import com.monopoly.game.Card;
 import com.monopoly.game.CompanyCard;
@@ -315,7 +300,6 @@ public class CurrentPlayerView
 		{
 			for(int j = 0; j < TERRAIN_CARDS_GRID_WIDTH; ++j)
 			{
-				Board.CardInfo cardInfo = new Board.CardInfo(0, "terrain");
 				DataButton cardButton = new DataButton();		
 				
 				cardButton.setOpaque(false);

@@ -26,11 +26,20 @@ public class PlayersBalanceView
 	private static final long serialVersionUID = 7970826428341424055L;
 	private HashMap< Player.PlayerColor , JLabel > bankBalances;
 	private HashMap< Player.PlayerColor , ImageIcon > pinIcons;
+	private HashMap< Player.PlayerColor , Boolean > bankrupt;
 
 	public PlayersBalanceView( int x , int y , int width, int height, int numberOfPlayers )
 	{
 		this.pinIcons = new HashMap< Player.PlayerColor , ImageIcon >();
 		this.loadPinImages();
+		
+		this.bankrupt = new HashMap< Player.PlayerColor , Boolean >(numberOfPlayers);
+		Player.PlayerColor color = Player.PlayerColor.BLACK;
+		do {
+			bankrupt.put( color , false);
+			
+			color = color.getNext();
+		} while( color != Player.PlayerColor.BLACK );
 		
 		this.bankBalances = new HashMap< Player.PlayerColor , JLabel >();
 		this.setupGridLayout( numberOfPlayers );	
@@ -103,7 +112,7 @@ public class PlayersBalanceView
 		
 		JLabel balance = this.bankBalances.get(color);	
 		
-		if( money > 0 )
+		if( this.bankrupt.get( p.getPinColor() ) == false )
 			balance.setText( "R$" + money.toString() );
 		else
 			balance.setText( "FALIU" );
@@ -118,6 +127,13 @@ public class PlayersBalanceView
 			this.setPlayerBalance( (Player) player );
 			System.out.println( "Player balance updated" );
 			
+			this.repaint();
+		}
+		else if( player instanceof Player &&
+				 message.equals( GAME_PLAYER_DIED ) )
+		{			
+			this.bankrupt.put( ((Player) player).getPinColor() , true );
+				
 			this.repaint();
 		}
 	}
