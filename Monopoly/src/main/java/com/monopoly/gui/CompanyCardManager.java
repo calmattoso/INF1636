@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 
 import com.monopoly.game.Bank;
 import com.monopoly.game.CompanyCard;
-import com.monopoly.game.TerrainCard;
 
 public class CompanyCardManager 
 	extends JFrame 

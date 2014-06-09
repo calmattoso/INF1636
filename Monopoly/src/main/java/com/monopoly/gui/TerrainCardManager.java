@@ -16,7 +16,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.monopoly.game.Bank;
-import com.monopoly.game.CompanyCard;
 import com.monopoly.game.GameController;
 import com.monopoly.game.TerrainCard;
 
